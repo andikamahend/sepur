@@ -1,25 +1,94 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package tiketkereta.admin;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import tiketkereta.Login;
-
+import javax.swing.table.DefaultTableModel;
+import tiketkereta.Koneksi;
 /**
  *
  * @author ASUS
  */
 public class KelolaRute extends javax.swing.JFrame {
+    DefaultTableModel tabModel;
+    DefaultComboBoxModel<String> comboKeretaModel;
+    private String selectedRuteId = null;
 
     /**
      * Creates new form AdminMenu
      */
     public KelolaRute() {
         initComponents();
+        showData();
+        loadKereta();
+        setLocationRelativeTo(this);
     }
-
+  private void loadKereta(){
+        comboKeretaModel = new DefaultComboBoxModel<>();
+        cbPilihKereta.setModel(comboKeretaModel);
+        
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "SELECT * FROM kereta";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            while(rs.next()){
+                comboKeretaModel.addElement(rs.getString("nama_kereta"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private int getIdKeretaByName(String namaKereta) throws SQLException{
+         Connection conn = Koneksi.getConnection();
+         String sql = "SELECT id_kereta FROM kereta WHERE nama_kereta = ?";
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ps.setString(1, namaKereta);
+         ResultSet rs = ps.executeQuery();
+         if(rs.next()){
+             return rs.getInt("id_kereta");
+         }
+         return 0;
+     }
+    
+    private void showData(){
+        Object[] baris = {"ID Rute", "Kereta", "Asal", "Tujuan"};
+        tabModel = new DefaultTableModel(null, baris);
+        jTableRute.setModel(tabModel);
+        
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "SELECT r.id_rute, k.nama_kereta, r.asal, r.tujuan "
+                    + "FROM rute r JOIN kereta k ON r.id_kereta = k.id_kereta ORDER BY r.id_rute ASC";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            while(rs.next()){
+                tabModel.addRow(new Object[]{
+                    rs.getString("id_rute"),
+                    rs.getString("nama_kereta"),
+                    rs.getString("asal"),
+                    rs.getString("tujuan")
+                });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void clear(){
+        cbPilihKereta.setSelectedIndex(0);
+        cbAsal.setSelectedIndex(0);
+        cbTujuan.setSelectedIndex(0);
+        jTableRute.clearSelection();
+        selectedRuteId = null;
+        btnRute.setEnabled(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,15 +106,13 @@ public class KelolaRute extends javax.swing.JFrame {
         btnHapusRute = new javax.swing.JButton();
         btnBersihkan = new javax.swing.JButton();
         btnKembali = new javax.swing.JButton();
-        txtIdRute = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableRute = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         cbPilihKereta = new javax.swing.JComboBox<>();
-        cbAsal = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        cbAsal = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
         cbTujuan = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -65,7 +132,7 @@ public class KelolaRute extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(281, 281, 281))
+                .addGap(256, 256, 256))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +156,7 @@ public class KelolaRute extends javax.swing.JFrame {
             }
         });
 
-        btnHapusRute.setText("HapusRute Kereta");
+        btnHapusRute.setText("Hapus Rute Kereta");
         btnHapusRute.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHapusRuteActionPerformed(evt);
@@ -110,18 +177,6 @@ public class KelolaRute extends javax.swing.JFrame {
             }
         });
 
-        txtIdRute.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIdRuteActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("ID Rute");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("Pilih Asal Kereta");
-
         jTableRute.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -133,19 +188,25 @@ public class KelolaRute extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTableRute.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableRuteMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableRute);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Pilih Kereta");
-
-        cbPilihKereta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        cbAsal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel4.setText("Pilih Kereta ");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText("Pilih Tujuan Kereta");
+        jLabel6.setText("Pilih Asal Stasiun");
 
-        cbTujuan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbAsal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jakarta", "Bandung", "Solo", "Yogyakarta", "Malang", "Surabaya" }));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setText("Pilih Tujuan Stasiun");
+
+        cbTujuan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jakarta", "Bandung", "Solo", "Yogyakarta", "Malang", "Surabaya", " " }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -158,53 +219,36 @@ public class KelolaRute extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
-                        .addComponent(btnRute)
-                        .addGap(34, 34, 34)
-                        .addComponent(btnEditRute)
-                        .addGap(35, 35, 35)
-                        .addComponent(btnHapusRute)
-                        .addGap(41, 41, 41)
-                        .addComponent(btnBersihkan)
-                        .addGap(36, 36, 36)
-                        .addComponent(btnKembali)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbPilihKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7))
+                                .addGap(116, 116, 116))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnRute)
+                                .addGap(34, 34, 34)
+                                .addComponent(btnEditRute)
+                                .addGap(35, 35, 35)
+                                .addComponent(btnHapusRute)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnBersihkan)
+                                .addGap(36, 36, 36)
+                                .addComponent(btnKembali)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtIdRute)
-                        .addGap(174, 174, 174))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(cbPilihKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(190, 190, 190))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtIdRute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -213,8 +257,12 @@ public class KelolaRute extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRute)
                     .addComponent(btnEditRute)
@@ -242,38 +290,138 @@ public class KelolaRute extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtIdRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdRuteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIdRuteActionPerformed
-
     private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
-        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            new Login().setVisible(true);
-            this.dispose();
-        }        // TODO add your handling code here:
+    new AdminMenu().setVisible(true);
+       this.dispose();       
     }//GEN-LAST:event_btnKembaliActionPerformed
 
     private void btnBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihkanActionPerformed
-        // TODO add your handling code here:
+       clear();
     }//GEN-LAST:event_btnBersihkanActionPerformed
 
     private void btnHapusRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusRuteActionPerformed
-        // TODO add your handling code here:
+        if (selectedRuteId == null) {
+            JOptionPane.showMessageDialog(this, "Pilih data rute yang akan dihapus!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if(confirm == JOptionPane.YES_OPTION){
+            try {
+                Connection conn = Koneksi.getConnection();
+                String sql = "DELETE FROM rute WHERE id_rute = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, selectedRuteId);
+                ps.executeUpdate();
+                
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus");
+                ps.close();
+                conn.close();
+                
+                showData();
+                clear();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_btnHapusRuteActionPerformed
 
     private void btnEditRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditRuteActionPerformed
-        // TODO add your handling code here:
+          if (selectedRuteId == null) {
+            JOptionPane.showMessageDialog(this, "Pilih data rute yang akan diupdate!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if(cbAsal.getSelectedItem().toString().equals(cbTujuan.getSelectedItem().toString())){
+            JOptionPane.showMessageDialog(this, "Asal dan Tujuan tidak boleh sama!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "UPDATE rute SET id_kereta = ?, asal = ?, tujuan = ? WHERE id_rute = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            
+            ps.setInt(1, getIdKeretaByName(cbPilihKereta.getSelectedItem().toString()));
+            ps.setString(2, cbAsal.getSelectedItem().toString());
+            ps.setString(3, cbTujuan.getSelectedItem().toString());
+            ps.setString(4, selectedRuteId);
+            
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Data berhasil diupdate");
+            ps.close();
+            conn.close();
+            
+            showData();
+            clear();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengupdate data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnEditRuteActionPerformed
 
     private void btnRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRuteActionPerformed
-
+        if(cbAsal.getSelectedItem().toString().equals(cbTujuan.getSelectedItem().toString())){
+            JOptionPane.showMessageDialog(this, "Asal dan Tujuan tidak boleh sama!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "INSERT INTO rute (id_kereta, asal, tujuan) VALUES (?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            
+            ps.setInt(1, getIdKeretaByName(cbPilihKereta.getSelectedItem().toString()));
+            ps.setString(2, cbAsal.getSelectedItem().toString());
+            ps.setString(3, cbTujuan.getSelectedItem().toString());
+            
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan");
+            ps.close();
+            conn.close();
+            
+            showData();
+            clear();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal menambahkan data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnRuteActionPerformed
+
+    private void jTableRuteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRuteMouseClicked
+        int row = jTableRute.getSelectedRow();
+        if (row == -1) return;
+
+        selectedRuteId = jTableRute.getValueAt(row, 0).toString();
+        cbPilihKereta.setSelectedItem(jTableRute.getValueAt(row, 1).toString());
+        cbAsal.setSelectedItem(jTableRute.getValueAt(row, 2).toString());
+        cbTujuan.setSelectedItem(jTableRute.getValueAt(row, 3).toString());
+        btnRute.setEnabled(false);
+    }//GEN-LAST:event_jTableRuteMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(KelolaRute.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(KelolaRute.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(KelolaRute.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(KelolaRute.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -322,14 +470,12 @@ public class KelolaRute extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbPilihKereta;
     private javax.swing.JComboBox<String> cbTujuan;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableRute;
-    private javax.swing.JTextField txtIdRute;
     // End of variables declaration//GEN-END:variables
 }
