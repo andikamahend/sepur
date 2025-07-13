@@ -32,11 +32,23 @@ public class KelolaKereta extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        btnKereta = new javax.swing.JButton();
-        btnRute = new javax.swing.JButton();
-        btnUser = new javax.swing.JButton();
-        btnPemesanan = new javax.swing.JButton();
-        btnLogout = new javax.swing.JButton();
+        btnKelasKereta = new javax.swing.JButton();
+        btnEditKelas = new javax.swing.JButton();
+        btnHapusKelas = new javax.swing.JButton();
+        btnBersihkan = new javax.swing.JButton();
+        btnKembali = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtIdKelas = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtHarga = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        rbEkonomi = new javax.swing.JRadioButton();
+        rbBisni = new javax.swing.JRadioButton();
+        rbEksekutif = new javax.swing.JRadioButton();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableKelas = new javax.swing.JTable();
+        cbKereta = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,7 +58,7 @@ public class KelolaKereta extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("MENU ADMIN");
+        jLabel1.setText("MENU KELOLA KERETA");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -55,50 +67,110 @@ public class KelolaKereta extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(264, 264, 264))
+                .addGap(236, 236, 236))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
 
-        btnKereta.setText("Tambah Kereta ");
-        btnKereta.addActionListener(new java.awt.event.ActionListener() {
+        btnKelasKereta.setText("Tambah Kelas Kereta ");
+        btnKelasKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKeretaActionPerformed(evt);
+                btnKelasKeretaActionPerformed(evt);
             }
         });
 
-        btnRute.setText("Kelola Rute");
-        btnRute.addActionListener(new java.awt.event.ActionListener() {
+        btnEditKelas.setText("Edit Kelas Kereta");
+        btnEditKelas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRuteActionPerformed(evt);
+                btnEditKelasActionPerformed(evt);
             }
         });
 
-        btnUser.setText("Kelola User");
-        btnUser.addActionListener(new java.awt.event.ActionListener() {
+        btnHapusKelas.setText("Hapus Kelas Kereta");
+        btnHapusKelas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUserActionPerformed(evt);
+                btnHapusKelasActionPerformed(evt);
             }
         });
 
-        btnPemesanan.setText("Kelola Pemesanan");
-        btnPemesanan.addActionListener(new java.awt.event.ActionListener() {
+        btnBersihkan.setText("Bersihkan");
+        btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPemesananActionPerformed(evt);
+                btnBersihkanActionPerformed(evt);
             }
         });
 
-        btnLogout.setText("Logout");
-        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+        btnKembali.setText("Kembali");
+        btnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogoutActionPerformed(evt);
+                btnKembaliActionPerformed(evt);
             }
         });
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Pilih Kereta");
+
+        txtIdKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdKelasActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("ID Kelas");
+
+        txtHarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHargaActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setText("Kelas");
+
+        rbEkonomi.setText("Ekonomi");
+        rbEkonomi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbEkonomiActionPerformed(evt);
+            }
+        });
+
+        rbBisni.setText("Bisnis");
+        rbBisni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbBisniActionPerformed(evt);
+            }
+        });
+
+        rbEksekutif.setText("Eksekutif");
+        rbEksekutif.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbEksekutifActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setText("Harga");
+
+        jTableKelas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTableKelas);
+
+        cbKereta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,30 +178,73 @@ public class KelolaKereta extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(btnKereta)
-                .addGap(34, 34, 34)
-                .addComponent(btnRute)
-                .addGap(35, 35, 35)
-                .addComponent(btnUser)
-                .addGap(34, 34, 34)
-                .addComponent(btnPemesanan)
-                .addGap(36, 36, 36)
-                .addComponent(btnLogout)
+                .addGap(60, 60, 60)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtIdKelas)
+                    .addComponent(jLabel3)
+                    .addComponent(cbKereta, 0, 100, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(213, 213, 213)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(rbEkonomi)
+                        .addGap(15, 15, 15)
+                        .addComponent(rbBisni)
+                        .addGap(18, 18, 18)
+                        .addComponent(rbEksekutif))
+                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(btnKelasKereta)
+                .addGap(34, 34, 34)
+                .addComponent(btnEditKelas)
+                .addGap(35, 35, 35)
+                .addComponent(btnHapusKelas)
+                .addGap(41, 41, 41)
+                .addComponent(btnBersihkan)
+                .addGap(36, 36, 36)
+                .addComponent(btnKembali)
+                .addGap(18, 18, 18))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtIdKelas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbEkonomi)
+                    .addComponent(rbBisni)
+                    .addComponent(rbEksekutif))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnKereta)
-                    .addComponent(btnRute)
-                    .addComponent(btnUser)
-                    .addComponent(btnPemesanan)
-                    .addComponent(btnLogout))
-                .addGap(0, 445, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbKereta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnKelasKereta)
+                    .addComponent(btnEditKelas)
+                    .addComponent(btnHapusKelas)
+                    .addComponent(btnBersihkan)
+                    .addComponent(btnKembali))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -148,29 +263,49 @@ public class KelolaKereta extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnKeretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeretaActionPerformed
+    private void btnKelasKeretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelasKeretaActionPerformed
 
-    }//GEN-LAST:event_btnKeretaActionPerformed
+    }//GEN-LAST:event_btnKelasKeretaActionPerformed
 
-    private void btnPemesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPemesananActionPerformed
+    private void btnBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihkanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPemesananActionPerformed
+    }//GEN-LAST:event_btnBersihkanActionPerformed
 
-    private void btnRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRuteActionPerformed
+    private void btnEditKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditKelasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRuteActionPerformed
+    }//GEN-LAST:event_btnEditKelasActionPerformed
 
-    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+    private void btnHapusKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusKelasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnUserActionPerformed
+    }//GEN-LAST:event_btnHapusKelasActionPerformed
 
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+    private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
     int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
     if (confirm == JOptionPane.YES_OPTION) {
         new Login().setVisible(true);
         this.dispose();
     }        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogoutActionPerformed
+    }//GEN-LAST:event_btnKembaliActionPerformed
+
+    private void txtIdKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdKelasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdKelasActionPerformed
+
+    private void txtHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHargaActionPerformed
+
+    private void rbEkonomiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEkonomiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbEkonomiActionPerformed
+
+    private void rbBisniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbBisniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbBisniActionPerformed
+
+    private void rbEksekutifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEksekutifActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbEksekutifActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,13 +344,25 @@ public class KelolaKereta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnKereta;
-    private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnPemesanan;
-    private javax.swing.JButton btnRute;
-    private javax.swing.JButton btnUser;
+    private javax.swing.JButton btnBersihkan;
+    private javax.swing.JButton btnEditKelas;
+    private javax.swing.JButton btnHapusKelas;
+    private javax.swing.JButton btnKelasKereta;
+    private javax.swing.JButton btnKembali;
+    private javax.swing.JComboBox<String> cbKereta;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableKelas;
+    private javax.swing.JRadioButton rbBisni;
+    private javax.swing.JRadioButton rbEkonomi;
+    private javax.swing.JRadioButton rbEksekutif;
+    private javax.swing.JTextField txtHarga;
+    private javax.swing.JTextField txtIdKelas;
     // End of variables declaration//GEN-END:variables
 }
