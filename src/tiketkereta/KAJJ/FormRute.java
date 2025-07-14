@@ -1,13 +1,51 @@
 package tiketkereta.KAJJ;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import tiketkereta.Koneksi;
+import tiketkereta.MenuUtama;
 public class FormRute extends javax.swing.JFrame {
-private String noUrut, nim, nama;
+    private String noUrut, nim, nama;
+
+
     public FormRute(String no, String nim, String nama) {
         initComponents();
-    this.noUrut = no;
-    this.nim = nim;
-    this.nama = nama;
+        this.noUrut = no;
+        this.nim = nim;
+        this.nama = nama;
+        
+        loadStasiunData();
+        
+        // Mengatur posisi frame di tengah layar
+        setLocationRelativeTo(null);
+    }
+    
+    private void loadStasiunData() {
+        DefaultComboBoxModel<String> asalModel = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> tujuanModel = new DefaultComboBoxModel<>();
+        
+        try {
+            Connection conn = Koneksi.getConnection();
+            Statement st = conn.createStatement();
+            
+            ResultSet rsAsal = st.executeQuery("SELECT DISTINCT asal FROM rute ORDER BY asal ASC");
+            while (rsAsal.next()) {
+                asalModel.addElement(rsAsal.getString("asal"));
+            }
+            comboAsal.setModel(asalModel);
+
+            ResultSet rsTujuan = st.executeQuery("SELECT DISTINCT tujuan FROM rute ORDER BY tujuan ASC");
+            while (rsTujuan.next()) {
+                tujuanModel.addElement(rsTujuan.getString("tujuan"));
+            }
+            comboTujuan.setModel(tujuanModel);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat data stasiun: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -21,13 +59,13 @@ private String noUrut, nim, nama;
         comboAsal = new javax.swing.JComboBox<>();
         comboTujuan = new javax.swing.JComboBox<>();
         spinnerDewasa = new javax.swing.JSpinner();
-        txtTanggal = new javax.swing.JTextField();
         spinnerBayi = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        dateChooser = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 51, 255));
@@ -56,7 +94,10 @@ private String noUrut, nim, nama;
             }
         });
 
-        txtTanggal.setText("yyyy-mm-dd ");
+        spinnerDewasa.setModel(new javax.swing.SpinnerNumberModel(1, 1, 4, 1));
+
+        spinnerBayi.setModel(new javax.swing.SpinnerNumberModel(0, 0, 4, 1));
+        spinnerBayi.setAutoscrolls(true);
 
         jLabel1.setText("Stasiun Asal");
 
@@ -118,10 +159,10 @@ private String noUrut, nim, nama;
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(dateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(27, 27, 27)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(spinnerDewasa, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4))
@@ -150,10 +191,11 @@ private String noUrut, nim, nama;
                     .addComponent(jLabel4)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerBayi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerDewasa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(spinnerBayi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spinnerDewasa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -186,39 +228,37 @@ private String noUrut, nim, nama;
     }//GEN-LAST:event_comboTujuanActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String asal = comboAsal.getSelectedItem().toString();
-    String tujuan = comboTujuan.getSelectedItem().toString();
-    String tanggal = txtTanggal.getText();
-    int dewasa = (Integer) spinnerDewasa.getValue();
-    int bayi = (Integer) spinnerBayi.getValue();
+        String asal = comboAsal.getSelectedItem().toString();
+        String tujuan = comboTujuan.getSelectedItem().toString();
+        
+        // Mengambil tanggal dari JDateChooser
+        String tanggal = "";
+        if (dateChooser.getDate() != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            tanggal = sdf.format(dateChooser.getDate());
+        }
 
-    // Validasi
-    if (asal.equals(tujuan)) {
-        JOptionPane.showMessageDialog(this, "Asal dan Tujuan tidak boleh sama!");
-        return;
-    }
-    if (tanggal.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Tanggal keberangkatan wajib diisi!");
-        return;
-    }
-    if (dewasa == 0 && bayi == 0) {
-        JOptionPane.showMessageDialog(this, "Minimal 1 penumpang harus diisi!");
-        return;
-    }
-    if (!txtTanggal.getText().matches("\\d{4}-\\d{2}-\\d{2}")) {
-        JOptionPane.showMessageDialog(this, "Format tanggal harus yyyy-mm-dd!");
-        return;
-    }
-    int totalPenumpang = dewasa + bayi;
-    if (totalPenumpang > 4) {
-        JOptionPane.showMessageDialog(this, "Maksimal 4 penumpang per pesanan!");
-        return;
-    }
-    ArrayList<Penumpang> daftarPenumpang = new ArrayList<>();
+        int dewasa = (Integer) spinnerDewasa.getValue();
+        int bayi = (Integer) spinnerBayi.getValue();
 
-    FormPilihKereta form3 = new FormPilihKereta(asal, tujuan, tanggal, dewasa, bayi, noUrut, nim, nama);
-    form3.setVisible(true);
-    this.dispose();
+        // Validasi
+        if (asal.equals(tujuan)) {
+            JOptionPane.showMessageDialog(this, "Asal dan Tujuan tidak boleh sama!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (tanggal.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tanggal keberangkatan wajib diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int totalPenumpang = dewasa + bayi;
+        if (totalPenumpang > 4) {
+            JOptionPane.showMessageDialog(this, "Maksimal 4 penumpang per pesanan!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Pindah ke form berikutnya
+        new FormPilihKereta(asal, tujuan, tanggal, dewasa, bayi, noUrut, nim, nama).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void comboAsalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAsalActionPerformed
@@ -226,7 +266,8 @@ private String noUrut, nim, nama;
     }//GEN-LAST:event_comboAsalActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      this.dispose();
+        new MenuUtama(nama, nim, noUrut).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -261,6 +302,7 @@ private String noUrut, nim, nama;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> comboAsal;
     private javax.swing.JComboBox<String> comboTujuan;
+    private com.toedter.calendar.JDateChooser dateChooser;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -273,6 +315,5 @@ private String noUrut, nim, nama;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSpinner spinnerBayi;
     private javax.swing.JSpinner spinnerDewasa;
-    private javax.swing.JTextField txtTanggal;
     // End of variables declaration//GEN-END:variables
 }

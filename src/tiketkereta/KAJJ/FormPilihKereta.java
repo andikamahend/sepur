@@ -1,70 +1,84 @@
 package tiketkereta.KAJJ;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import tiketkereta.Koneksi;
+
 public class FormPilihKereta extends javax.swing.JFrame {
-    String asal, tujuan, tanggal;
-    int dewasa, bayi;
+    private String asal, tujuan, tanggal;
+    private int dewasa, bayi;
     private String noUrut, nim, nama;
-    private HashMap<String, Map<String, Integer>> hargaMap = new HashMap<>();
+
     public FormPilihKereta(String asal, String tujuan, String tanggal, int dewasa, int bayi, String noUrut, String nim, String nama) {
         initComponents();
-        this.noUrut = noUrut;
-        this.nim = nim;
-        this.nama = nama;
         this.asal = asal;
         this.tujuan = tujuan;
         this.tanggal = tanggal;
         this.dewasa = dewasa;
         this.bayi = bayi;
+        this.noUrut = noUrut;
+        this.nim = nim;
+        this.nama = nama;
+
+        // Menampilkan informasi rute dan tanggal
         lblInfo.setText("Rute: " + asal + " → " + tujuan + " | Tanggal: " + tanggal);
-        isiHargaKereta();
+        
+        // Memuat daftar kereta dari database berdasarkan rute
         isiDaftarKereta(asal, tujuan);
-        // Tambahkan listener ke radio button agar update harga saat kelas dipilih
+
+        // Menambahkan listener ke radio button untuk memperbarui harga saat kelas dipilih
         rbtnEkonomi.addActionListener(e -> tampilkanHarga());
         rbtnBisnis.addActionListener(e -> tampilkanHarga());
         rbtnEksekutif.addActionListener(e -> tampilkanHarga());
+        
+        // Mengatur posisi frame di tengah
+        setLocationRelativeTo(null);
     }
-    
-    private void isiHargaKereta() {
-        hargaMap.put("Argo Parahyangan", Map.of("Eksekutif", 150000));
-        hargaMap.put("Pangrango Ekspres", Map.of("Ekonomi", 80000, "Eksekutif", 120000));
-        hargaMap.put("Lodaya", Map.of("Ekonomi", 90000, "Eksekutif", 140000));
-        hargaMap.put("Mataram", Map.of("Bisnis", 110000));
-        hargaMap.put("Malioboro Ekspres", Map.of("Ekonomi", 95000, "Eksekutif", 130000));
-        hargaMap.put("Gajayana", Map.of("Eksekutif", 170000));
-        hargaMap.put("Jayabaya", Map.of("Ekonomi", 85000));
-        hargaMap.put("Gumarang", Map.of("Ekonomi", 95000, "Eksekutif", 145000));
-        hargaMap.put("Taksaka", Map.of("Eksekutif", 160000));
-        hargaMap.put("Fajar Utama", Map.of("Eksekutif", 155000));
-    }
+
+    /**
+     * Mengisi JComboBox dengan daftar kereta yang tersedia untuk rute yang dipilih.
+     */
     private void isiDaftarKereta(String asal, String tujuan) {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        try {
+            Connection conn = Koneksi.getConnection();
+            // Query untuk mengambil nama kereta berdasarkan asal dan tujuan
+            String sql = "SELECT DISTINCT k.nama_kereta FROM kereta k " +
+                         "JOIN rute r ON k.id_kereta = r.id_kereta WHERE r.asal = ? AND r.tujuan = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, asal);
+            ps.setString(2, tujuan);
+            ResultSet rs = ps.executeQuery();
 
-        if (asal.equals("Jakarta") && tujuan.equals("Bandung")) {
-            model.addElement("Argo Parahyangan");
-            model.addElement("Pangrango Ekspres");
-        } else if (asal.equals("Bandung") && tujuan.equals("Solo")) {
-            model.addElement("Lodaya");
-            model.addElement("Mataram");
-        } else if (asal.equals("Yogyakarta") && tujuan.equals("Malang")) {
-            model.addElement("Malioboro Ekspres");
-            model.addElement("Gajayana");
-        } else if (asal.equals("Surabaya") && tujuan.equals("Jakarta")) {
-            model.addElement("Jayabaya");
-            model.addElement("Gumarang");
-        } else if (asal.equals("Jakarta") && tujuan.equals("Yogyakarta")) {
-            model.addElement("Taksaka");
-            model.addElement("Fajar Utama");
-        } else {
-            model.addElement("Tidak ada kereta langsung");
+            boolean keretaDitemukan = false;
+            while (rs.next()) {
+                model.addElement(rs.getString("nama_kereta"));
+                keretaDitemukan = true;
+            }
+
+            // Jika tidak ada kereta, tampilkan pesan dan nonaktifkan komponen
+            if (!keretaDitemukan) {
+                model.addElement("Tidak ada kereta langsung");
+                comboKereta.setEnabled(false);
+                rbtnEkonomi.setEnabled(false);
+                rbtnBisnis.setEnabled(false);
+                rbtnEksekutif.setEnabled(false);
+                jButton1.setEnabled(false); // Nonaktifkan tombol Lanjut
+            }
+            
+            comboKereta.setModel(model);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat daftar kereta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        comboKereta.setModel(model);
     }
 
+    /**
+     * Menampilkan harga tiket berdasarkan kereta dan kelas yang dipilih.
+     */
     private void tampilkanHarga() {
         String kereta = (String) comboKereta.getSelectedItem();
         String kelas = "";
@@ -73,15 +87,69 @@ public class FormPilihKereta extends javax.swing.JFrame {
         else if (rbtnBisnis.isSelected()) kelas = "Bisnis";
         else if (rbtnEksekutif.isSelected()) kelas = "Eksekutif";
 
-        if (hargaMap.containsKey(kereta)) {
-            Integer harga = hargaMap.get(kereta).get(kelas);
-            if (harga != null) {
-                lblHarga.setText("Harga: Rp" + harga);
-            } else {
+        if (kereta != null && !kelas.isEmpty()) {
+            try {
+                Connection conn = Koneksi.getConnection();
+                // Query untuk mengambil harga dari tabel kereta_kelas
+                String sql = "SELECT harga FROM kereta_kelas kk " +
+                             "JOIN kereta k ON kk.id_kereta = k.id_kereta " +
+                             "WHERE k.nama_kereta = ? AND kk.kelas = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, kereta);
+                ps.setString(2, kelas);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    int harga = rs.getInt("harga");
+                    lblHarga.setText("Harga: Rp" + harga);
+                } else {
+                    lblHarga.setText("Harga: - (Kelas tidak tersedia)");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal mengambil harga: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 lblHarga.setText("Harga: -");
             }
         } else {
             lblHarga.setText("Harga: -");
+        }
+    }
+    
+    /**
+     * Mengatur ketersediaan radio button kelas berdasarkan kereta yang dipilih.
+     */
+
+    private void aturKetersediaanKelas() {
+        String keretaTerpilih = (String) comboKereta.getSelectedItem();
+        if (keretaTerpilih == null || keretaTerpilih.equals("Tidak ada kereta langsung")) {
+            return;
+        }
+
+        // Reset semua pilihan
+        ButtonGroup.clearSelection();
+        lblHarga.setText("Harga: -");
+        rbtnEkonomi.setEnabled(false);
+        rbtnBisnis.setEnabled(false);
+        rbtnEksekutif.setEnabled(false);
+
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "SELECT kelas FROM kereta_kelas kk JOIN kereta k ON kk.id_kereta = k.id_kereta WHERE k.nama_kereta = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, keretaTerpilih); // Menggunakan variabel yang sudah diperbaiki
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                String kelas = rs.getString("kelas");
+                if(kelas.equalsIgnoreCase("Ekonomi")){
+                    rbtnEkonomi.setEnabled(true);
+                } else if(kelas.equalsIgnoreCase("Bisnis")){
+                    rbtnBisnis.setEnabled(true);
+                } else if(kelas.equalsIgnoreCase("Eksekutif")){
+                    rbtnEksekutif.setEnabled(true);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal memuat kelas kereta: " + e.getMessage());
         }
     }
     @SuppressWarnings("unchecked")
@@ -239,6 +307,10 @@ public class FormPilihKereta extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Pilih salah satu kelas kereta!");
             return;
         }
+        if(lblHarga.getText().contains("tidak tersedia")){
+            JOptionPane.showMessageDialog(this, "Kelas yang Anda pilih tidak tersedia untuk kereta ini.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         int totalPenumpang = dewasa + bayi;
         ArrayList<Penumpang> daftarPenumpang = new ArrayList<>();
@@ -255,53 +327,11 @@ public class FormPilihKereta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void comboKeretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboKeretaActionPerformed
-        String kereta = comboKereta.getSelectedItem().toString();
-
-        rbtnEkonomi.setEnabled(false);
-        rbtnBisnis.setEnabled(false);
-        rbtnEksekutif.setEnabled(false);
-        rbtnEkonomi.setSelected(false);
-        rbtnBisnis.setSelected(false);
-        rbtnEksekutif.setSelected(false);
-
-        switch (kereta) {
-            case "Argo Parahyangan":
-            case "Pangrango Ekspres":
-            case "Malioboro Ekspres":
-                rbtnEkonomi.setEnabled(true);
-                rbtnEksekutif.setEnabled(true);
-                break;
-            case "Lodaya":
-                rbtnBisnis.setEnabled(true);
-                rbtnEksekutif.setEnabled(true);
-                break;
-            case "Mataram":
-                rbtnEkonomi.setEnabled(true);
-                break;
-            case "Gajayana":
-            case "Taksaka":
-                rbtnEksekutif.setEnabled(true);
-                break;
-            case "Jayabaya":
-                rbtnEkonomi.setEnabled(true);
-                break;
-            case "Gumarang":
-                rbtnEkonomi.setEnabled(true);
-                rbtnBisnis.setEnabled(true);
-                rbtnEksekutif.setEnabled(true);
-                break;
-            case "Fajar Utama":
-                rbtnBisnis.setEnabled(true);
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "Kelas tidak diketahui untuk kereta ini.");
-                break;
-        }
-
-        tampilkanHarga();
+    aturKetersediaanKelas();
     }//GEN-LAST:event_comboKeretaActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new FormRute(noUrut, nim, nama).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 

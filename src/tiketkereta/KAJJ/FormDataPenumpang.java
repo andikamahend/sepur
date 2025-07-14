@@ -67,7 +67,7 @@ public FormDataPenumpang(
         jLabel10 = new javax.swing.JLabel();
         lblkelas = new javax.swing.JLabel();
         txtnama = new javax.swing.JTextField();
-        txtnim = new javax.swing.JTextField();
+        txtnik = new javax.swing.JTextField();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         txtusia = new javax.swing.JTextField();
@@ -180,7 +180,7 @@ public FormDataPenumpang(
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtnim, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtnik, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                     .addGap(5, 5, 5)
                                     .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -209,7 +209,7 @@ public FormDataPenumpang(
                 .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtnim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtnik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -279,8 +279,8 @@ public FormDataPenumpang(
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nama = txtnama.getText();
-        String nik = txtnim.getText();
+        String namaPenumpang = txtnama.getText();
+        String nik = txtnik.getText();
         String jenisKelamin = jRadioButton1.isSelected() ? "Laki-Laki" : jRadioButton2.isSelected() ? "Perempuan" : "";
         int usia;
         try {
@@ -290,8 +290,8 @@ public FormDataPenumpang(
             return;
         }
 
-        if (nama.isEmpty() || nik.isEmpty() || jenisKelamin.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua data harus diisi!");
+        if (namaPenumpang.isEmpty() || nik.isEmpty() || jenisKelamin.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua data harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -299,41 +299,24 @@ public FormDataPenumpang(
         if (rbtnDewasa.isSelected()) tipe = "Dewasa";
         else if (rbtnBayi.isSelected()) tipe = "Bayi";
         else {
-            JOptionPane.showMessageDialog(this, "Pilih tipe penumpang!");
+            JOptionPane.showMessageDialog(this, "Pilih tipe penumpang!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int currentDewasa = 0;
-        int currentBayi = 0;
-        for (Penumpang p : daftarPenumpang) {
-            if (p.tipePenumpang.equals("Dewasa")) currentDewasa++;
-            if (p.tipePenumpang.equals("Bayi")) currentBayi++;
-        }
-
-        if (tipe.equals("Dewasa") && currentDewasa >= dewasa) {
-            JOptionPane.showMessageDialog(this, "Jumlah penumpang dewasa sudah cukup!");
-            return;
-        }
-
-        if (tipe.equals("Bayi") && currentBayi >= bayi) {
-            JOptionPane.showMessageDialog(this, "Jumlah penumpang bayi sudah cukup!");
-            return;
-        }
-
-        Penumpang p = new Penumpang(nama, nik, jenisKelamin, tipe, usia);
+        Penumpang p = new Penumpang(namaPenumpang, nik, jenisKelamin, tipe, usia);
         daftarPenumpang.add(p);
 
         if (penumpangKe < totalPenumpang) {
             new FormDataPenumpang(
                 asal, tujuan, tanggal, kereta, kelas,
                 penumpangKe + 1, totalPenumpang, daftarPenumpang,
-                noUrut, nim, nama, bayi, dewasa
+                noUrut, nim, this.nama, dewasa, bayi
             ).setVisible(true);
             this.dispose();
         } else {
             new FormOutput(
                 asal, tujuan, tanggal, kereta, kelas, daftarPenumpang,
-                noUrut, nim, nama
+                noUrut, nim, this.nama, true 
             ).setVisible(true);
             this.dispose();
         }
@@ -351,11 +334,6 @@ public FormDataPenumpang(
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -372,9 +350,6 @@ public FormDataPenumpang(
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FormDataPenumpang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -401,7 +376,7 @@ public FormDataPenumpang(
     private javax.swing.JRadioButton rbtnBayi;
     private javax.swing.JRadioButton rbtnDewasa;
     private javax.swing.JTextField txtnama;
-    private javax.swing.JTextField txtnim;
+    private javax.swing.JTextField txtnik;
     private javax.swing.JTextField txtusia;
     // End of variables declaration//GEN-END:variables
 }

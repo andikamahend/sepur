@@ -26,6 +26,7 @@ private String namamhs, nim, noUrut;
         txtprofile = new javax.swing.JLabel();
         btnkajj = new javax.swing.JButton();
         btnkrl = new javax.swing.JButton();
+        Briwayat = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,6 +46,13 @@ private String namamhs, nim, noUrut;
             }
         });
 
+        Briwayat.setText("Riwayat");
+        Briwayat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BriwayatActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -56,14 +64,18 @@ private String namamhs, nim, noUrut;
                         .addComponent(txtprofile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnkajj, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                .addComponent(btnkrl, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnkrl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Briwayat, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtprofile, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtprofile, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Briwayat))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnkrl, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
@@ -101,6 +113,11 @@ private String namamhs, nim, noUrut;
         this.dispose();
     }//GEN-LAST:event_btnkrlActionPerformed
 
+    private void BriwayatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BriwayatActionPerformed
+    new tiketkereta.KAJJ.RiwayatPemesanan(this.noUrut, this.nim, this.namamhs).setVisible(true);
+    this.dispose(); 
+    }//GEN-LAST:event_BriwayatActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -131,6 +148,7 @@ private String namamhs, nim, noUrut;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Briwayat;
     private javax.swing.JButton btnkajj;
     private javax.swing.JButton btnkrl;
     private javax.swing.JPanel jPanel1;
