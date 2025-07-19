@@ -11,13 +11,15 @@ import tiketkereta.Koneksi;
 
 
 public class TambahKereta extends javax.swing.JFrame {
-     DefaultTableModel tabModel;
-     private String selectedKeretaId = null; 
+    DefaultTableModel tabModel;
+    private String selectedKeretaId = null; 
+    
     public TambahKereta() {
         initComponents();
         showData();
         setLocationRelativeTo(this);
     }
+    
     private void showData(){
         Object[] baris = {"ID Kereta", "Nama Kereta"};
         tabModel = new DefaultTableModel(null, baris);
@@ -52,7 +54,7 @@ public class TambahKereta extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tiketkereta.ImagePanel(new javax.swing.ImageIcon(getClass().getResource("/bg_admin.jpg")).getImage());
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnKereta = new javax.swing.JButton();
@@ -67,11 +69,9 @@ public class TambahKereta extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU TAMBAH KERETA");
 
@@ -92,6 +92,9 @@ public class TambahKereta extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
+        btnKereta.setBackground(new java.awt.Color(255, 102, 0));
+        btnKereta.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKereta.setForeground(new java.awt.Color(255, 255, 255));
         btnKereta.setText("Tambah Kereta ");
         btnKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,6 +102,9 @@ public class TambahKereta extends javax.swing.JFrame {
             }
         });
 
+        btnEditKereta.setBackground(new java.awt.Color(255, 102, 0));
+        btnEditKereta.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditKereta.setForeground(new java.awt.Color(255, 255, 255));
         btnEditKereta.setText("Edit Kereta");
         btnEditKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,6 +112,9 @@ public class TambahKereta extends javax.swing.JFrame {
             }
         });
 
+        btnHapusKelas.setBackground(new java.awt.Color(255, 0, 0));
+        btnHapusKelas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapusKelas.setForeground(new java.awt.Color(255, 255, 255));
         btnHapusKelas.setText("Hapus Kereta");
         btnHapusKelas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,6 +122,9 @@ public class TambahKereta extends javax.swing.JFrame {
             }
         });
 
+        btnBersihkan.setBackground(new java.awt.Color(255, 102, 0));
+        btnBersihkan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBersihkan.setForeground(new java.awt.Color(255, 255, 255));
         btnBersihkan.setText("Bersihkan");
         btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,6 +132,9 @@ public class TambahKereta extends javax.swing.JFrame {
             }
         });
 
+        btnKembali.setBackground(new java.awt.Color(0, 0, 255));
+        btnKembali.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKembali.setForeground(new java.awt.Color(255, 255, 255));
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,6 +149,7 @@ public class TambahKereta extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Nama Kereta");
 
         jTableKereta.setModel(new javax.swing.table.DefaultTableModel(
@@ -162,7 +178,7 @@ public class TambahKereta extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +217,7 @@ public class TambahKereta extends javax.swing.JFrame {
                     .addComponent(btnKembali))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 82, Short.MAX_VALUE))
+                .addGap(0, 77, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -225,8 +241,8 @@ public class TambahKereta extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNamaKeretaActionPerformed
 
     private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
-     new AdminMenu().setVisible(true);
-        this.dispose();  
+        new AdminMenu().setVisible(true);
+            this.dispose();  
     }//GEN-LAST:event_btnKembaliActionPerformed
 
     private void btnBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihkanActionPerformed
@@ -340,7 +356,7 @@ public class TambahKereta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnKeretaActionPerformed
 
     private void jTableKeretaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKeretaMouseClicked
-       int row = jTableKereta.getSelectedRow();
+        int row = jTableKereta.getSelectedRow();
         if (row == -1) {
             return;
         }
@@ -353,9 +369,6 @@ public class TambahKereta extends javax.swing.JFrame {
         btnKereta.setEnabled(false); 
     }//GEN-LAST:event_jTableKeretaMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
      try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -373,8 +386,6 @@ public class TambahKereta extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(TambahKereta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

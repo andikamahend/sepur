@@ -1,4 +1,5 @@
 package tiketkereta.admin;
+
 import javax.swing.JOptionPane;
 import tiketkereta.Login;
 
@@ -13,7 +14,7 @@ public class AdminMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tiketkereta.ImagePanel(new javax.swing.ImageIcon(getClass().getResource("/bg_admin.jpg")).getImage());
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnKereta = new javax.swing.JButton();
@@ -26,12 +27,14 @@ public class AdminMenu extends javax.swing.JFrame {
         btnStasiun = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(785, 700));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+        jPanel1.setOpaque(false);
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU ADMIN");
 
@@ -39,69 +42,87 @@ public class AdminMenu extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(280, 280, 280)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(326, 326, 326))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
 
-        btnKereta.setText("Kelola Kereta ");
+        btnKereta.setBackground(new java.awt.Color(0, 102, 255));
+        btnKereta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Kelola Kereta.png"))); // NOI18N
+        btnKereta.setBorder(null);
         btnKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnKeretaActionPerformed(evt);
             }
         });
 
-        btnRute.setText("Kelola Rute");
+        btnRute.setBackground(new java.awt.Color(0, 102, 255));
+        btnRute.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Kelola Rute.png"))); // NOI18N
+        btnRute.setBorder(null);
         btnRute.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRuteActionPerformed(evt);
             }
         });
 
-        btnUser.setText("Lihat User");
+        btnUser.setBackground(new java.awt.Color(0, 102, 255));
+        btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Lihat User.png"))); // NOI18N
+        btnUser.setBorder(null);
         btnUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUserActionPerformed(evt);
             }
         });
 
-        btnTiketKereta.setText("Kelola Tiket Kereta");
+        btnTiketKereta.setBackground(new java.awt.Color(0, 102, 255));
+        btnTiketKereta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Kelola Tiket.png"))); // NOI18N
+        btnTiketKereta.setBorder(null);
         btnTiketKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTiketKeretaActionPerformed(evt);
             }
         });
 
+        btnLogout.setBackground(new java.awt.Color(255, 0, 0));
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
+        btnLogout.setBorder(null);
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogoutActionPerformed(evt);
             }
         });
 
-        btnTambahKereta.setText("Tambah Kereta ");
+        btnTambahKereta.setBackground(new java.awt.Color(0, 102, 255));
+        btnTambahKereta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Tambah Kereta.png"))); // NOI18N
+        btnTambahKereta.setBorder(null);
         btnTambahKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTambahKeretaActionPerformed(evt);
             }
         });
 
-        btnJadwal.setText("Kelola Jadwal KRL");
+        btnJadwal.setBackground(new java.awt.Color(0, 102, 255));
+        btnJadwal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Kelola Jadwal.png"))); // NOI18N
+        btnJadwal.setBorder(null);
         btnJadwal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnJadwalActionPerformed(evt);
             }
         });
 
-        btnStasiun.setText("Tambah Stasiun");
+        btnStasiun.setBackground(new java.awt.Color(0, 102, 255));
+        btnStasiun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/admin/Logo Kelola Stasiun.png"))); // NOI18N
+        btnStasiun.setBorder(null);
         btnStasiun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStasiunActionPerformed(evt);
@@ -121,7 +142,7 @@ public class AdminMenu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTiketKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTiketKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -141,7 +162,7 @@ public class AdminMenu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTiketKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTiketKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTambahKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,7 +175,7 @@ public class AdminMenu extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(185, 185, 185)
                         .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(230, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -162,12 +183,12 @@ public class AdminMenu extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 711, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -179,46 +200,43 @@ public class AdminMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnKeretaActionPerformed
 
     private void btnTiketKeretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTiketKeretaActionPerformed
-    new KelolaPesananTiket().setVisible(true);
-        this.dispose();
+        new KelolaPesananTiket().setVisible(true);
+            this.dispose();
     }//GEN-LAST:event_btnTiketKeretaActionPerformed
 
     private void btnRuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRuteActionPerformed
-    new KelolaRute().setVisible(true);
-        this.dispose();
+        new KelolaRute().setVisible(true);
+            this.dispose();
     }//GEN-LAST:event_btnRuteActionPerformed
 
     private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
-    new LihatUser().setVisible(true);
-        this.dispose();
+        new LihatUser().setVisible(true);
+            this.dispose();
     }//GEN-LAST:event_btnUserActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-    int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-    if (confirm == JOptionPane.YES_OPTION) {
-        new Login().setVisible(true);
-        this.dispose();
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin logout?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            new Login().setVisible(true);
+            this.dispose();
     }       
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnTambahKeretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahKeretaActionPerformed
-       new TambahKereta().setVisible(true);
-        this.dispose();
+        new TambahKereta().setVisible(true);
+            this.dispose();
     }//GEN-LAST:event_btnTambahKeretaActionPerformed
 
     private void btnJadwalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJadwalActionPerformed
         new KelolaJadwalKRL().setVisible(true);
-        this.dispose();
+            this.dispose();
     }//GEN-LAST:event_btnJadwalActionPerformed
 
     private void btnStasiunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStasiunActionPerformed
         new TambahStasiun().setVisible(true);
-        this.dispose();
+            this.dispose();
     }//GEN-LAST:event_btnStasiunActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -236,7 +254,6 @@ public class AdminMenu extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AdminMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
