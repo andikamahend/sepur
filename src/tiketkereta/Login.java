@@ -15,7 +15,6 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,8 +48,6 @@ public class Login extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel3.setBackground(new java.awt.Color(204, 0, 0));
 
@@ -169,52 +166,52 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BkeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BkeluarActionPerformed
-       System.exit(0);
-    }//GEN-LAST:event_BkeluarActionPerformed
-
     private void Blogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Blogin1ActionPerformed
-      String email = txtemail.getText().trim();
-    String password = txtpassword.getText().trim();
+        String email = txtemail.getText().trim();
+        String password = txtpassword.getText().trim();
 
-    try {
-        Connection conn = Koneksi.getConnection();
-        String sql = "SELECT * FROM user WHERE email = ? AND password = MD5(?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, email);
-        ps.setString(2, password);
-        ResultSet rs = ps.executeQuery();
+        try {
+            Connection conn = Koneksi.getConnection();
+            String sql = "SELECT * FROM user WHERE email = ? AND password = MD5(?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            String namaUser = rs.getString("nama");
-            String role = rs.getString("role");
+            if (rs.next()) {
+                String namaUser = rs.getString("nama");
+                String role = rs.getString("role");
 
-            JOptionPane.showMessageDialog(this, "Login Berhasil! Selamat datang " + namaUser);
+                JOptionPane.showMessageDialog(this, "Login Berhasil! Selamat datang " + namaUser);
 
-            if (role.equalsIgnoreCase("admin")) {
-              new AdminMenu().setVisible(true);
-            } else if (role.equalsIgnoreCase("user")) {
-              new MenuUtama(namaUser, email, String.valueOf(rs.getInt("id_user"))).setVisible(true);
+                if (role.equalsIgnoreCase("admin")) {
+                    new AdminMenu().setVisible(true);
+                } else if (role.equalsIgnoreCase("user")) {
+                    new MenuUtama(namaUser, email, String.valueOf(rs.getInt("id_user"))).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Role tidak dikenali: " + role);
+                }
+                this.dispose();
             } else {
-              JOptionPane.showMessageDialog(this, "Role tidak dikenali: " + role);
+                JOptionPane.showMessageDialog(this, "Email atau password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
             }
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Email atau password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
-        }
 
-        rs.close();
-        ps.close();
-        conn.close();
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
-    }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage());
+        }
     }//GEN-LAST:event_Blogin1ActionPerformed
 
     private void BregisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BregisterActionPerformed
-    new Register().setVisible(true);
-    this.dispose();        
+        new Register().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BregisterActionPerformed
+
+    private void BkeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BkeluarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_BkeluarActionPerformed
 
     /**
      * @param args the command line arguments

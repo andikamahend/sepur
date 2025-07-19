@@ -1,4 +1,5 @@
 package tiketkereta.KAJJ;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -10,15 +11,21 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.awt.Color; // Import java.awt.Color
+import java.awt.Color;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import tiketkereta.Koneksi;
 
 
@@ -230,92 +237,118 @@ public class FormOutput extends javax.swing.JFrame {
     }
     
     private void cetakTiketPdf() {
-        String path = "C:\\Users\\PC\\Documents\\" + kereta.replaceAll("\\s", "") + "_" + System.currentTimeMillis() + ".pdf";
-        Document document = new Document(PageSize.A4, 36, 36, 36, 36); // Margin
+        // 1. Membuat dan menampilkan dialog penyimpanan file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan E-Tiket sebagai PDF");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("File PDF (*.pdf)", "pdf"));
+        
+        // Membuat nama file default yang unik dan deskriptif
+        String defaultFileName = "E-Tiket_" + kereta.replaceAll("\\s", "") + "_" + System.currentTimeMillis() + ".pdf";
+        fileChooser.setSelectedFile(new File(defaultFileName));
 
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream(path));
-            document.open();
+        int userSelection = fileChooser.showSaveDialog(this);
 
-            // === DEFINISI WARNA DAN FONT ===
-            Color oranyeKAI = new Color(255, 121, 0);
-            Font fontJudul = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, oranyeKAI);
-            Font fontSubJudul = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.BLACK);
-            Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.GRAY);
-            Font fontIsi = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK);
-            Font fontHeaderTabel = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
-            Font fontIsiTabel = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+        // 2. Lanjutkan hanya jika pengguna menekan tombol "Save"
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
             
-            // === HEADER UTAMA ===
-            PdfPTable headerTabel = new PdfPTable(2);
-            headerTabel.setWidthPercentage(100);
-            headerTabel.setWidths(new float[]{1, 4});
-            
-            PdfPCell logoCell = new PdfPCell(new Phrase("SEPOR", fontJudul));
-            logoCell.setBorder(PdfPCell.NO_BORDER);
-            headerTabel.addCell(logoCell);
-            
-            PdfPCell judulCell = new PdfPCell(new Phrase("E-Tiket Kereta Api", fontSubJudul));
-            judulCell.setBorder(PdfPCell.NO_BORDER);
-            judulCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            judulCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            headerTabel.addCell(judulCell);
-            
-            document.add(headerTabel);
-            
-            // Garis pemisah
-            document.add(new Paragraph("=========================================================================="));
-            
-            // === DETAIL PERJALANAN ===
-            document.add(new Paragraph(" "));
-            Paragraph pPerjalanan = new Paragraph("DETAIL PERJALANAN", fontSubJudul);
-            pPerjalanan.setSpacingAfter(8f);
-            document.add(pPerjalanan);
-            
-            PdfPTable tabelPerjalanan = new PdfPTable(2);
-            tabelPerjalanan.setWidthPercentage(100);
-            tabelPerjalanan.setWidths(new float[]{1, 4});
-            tabelPerjalanan.addCell(createKeyValueCell("Kereta Api", kereta + " (" + kelas + ")", fontHeader, fontIsi));
-            tabelPerjalanan.addCell(createKeyValueCell("Tanggal", tanggal, fontHeader, fontIsi));
-            tabelPerjalanan.addCell(createKeyValueCell("Rute", asal + " -> " + tujuan, fontHeader, fontIsi, 2));
-            document.add(tabelPerjalanan);
-
-            // === DETAIL PENUMPANG ===
-            document.add(new Paragraph(" "));
-            Paragraph pPenumpang = new Paragraph("DETAIL PENUMPANG", fontSubJudul);
-            pPenumpang.setSpacingAfter(8f);
-            document.add(pPenumpang);
-
-            PdfPTable tabelPenumpang = new PdfPTable(4);
-            tabelPenumpang.setWidthPercentage(100);
-            tabelPenumpang.setWidths(new float[]{3, 3, 1.5f, 2});
-            tabelPenumpang.addCell(createHeaderCell("Nama", oranyeKAI));
-            tabelPenumpang.addCell(createHeaderCell("No. Identitas (NIK)", oranyeKAI));
-            tabelPenumpang.addCell(createHeaderCell("Tipe", oranyeKAI));
-            tabelPenumpang.addCell(createHeaderCell("Kursi", oranyeKAI));
-
-            for (Penumpang p : daftarPenumpang) {
-                tabelPenumpang.addCell(new Phrase(p.nama, fontIsiTabel));
-                tabelPenumpang.addCell(new Phrase(p.nik, fontIsiTabel));
-                tabelPenumpang.addCell(new Phrase(p.tipePenumpang, fontIsiTabel));
-                tabelPenumpang.addCell(new Phrase("-", fontIsiTabel)); // Data kursi belum ada
+            // Memastikan file memiliki ekstensi .pdf
+            if (!fileToSave.getAbsolutePath().endsWith(".pdf")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
             }
-            document.add(tabelPenumpang);
-            document.add(new Paragraph(" "));
-
-            document.add(new Paragraph("Terima kasih telah menggunakan layanan SEPOR. Selamat menikmati perjalanan Anda.", fontHeader));
             
-            JOptionPane.showMessageDialog(this, "File PDF berhasil dibuat di:\n" + path, "Cetak Berhasil", JOptionPane.INFORMATION_MESSAGE);
+            Document document = new Document(PageSize.A4, 36, 36, 36, 36);
 
-        } catch (DocumentException | java.io.IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal membuat file PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            document.close();
+            try {
+                // Menggunakan path dari JFileChooser
+                PdfWriter.getInstance(document, new FileOutputStream(fileToSave));
+                document.open();
+
+                // === DEFINISI WARNA DAN FONT ===
+                Color oranyeKAI = new Color(255, 121, 0);
+                Font fontJudul = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, oranyeKAI);
+                Font fontSubJudul = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.BLACK);
+                Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.GRAY);
+                Font fontIsi = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK);
+                Font fontHeaderTabel = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
+                Font fontIsiTabel = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
+                
+                // === HEADER UTAMA ===
+                PdfPTable headerTabel = new PdfPTable(2);
+                headerTabel.setWidthPercentage(100);
+                headerTabel.setWidths(new float[]{1, 4});
+                
+                PdfPCell logoCell = new PdfPCell(new Phrase("SEPOR", fontJudul));
+                logoCell.setBorder(PdfPCell.NO_BORDER);
+                headerTabel.addCell(logoCell);
+                
+                PdfPCell judulCell = new PdfPCell(new Phrase("E-Tiket Kereta Api", fontSubJudul));
+                judulCell.setBorder(PdfPCell.NO_BORDER);
+                judulCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                judulCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                headerTabel.addCell(judulCell);
+                
+                document.add(headerTabel);
+                
+                // Garis pemisah
+                document.add(new Paragraph("=========================================================================="));
+                
+                // === DETAIL PERJALANAN ===
+                document.add(new Paragraph(" "));
+                Paragraph pPerjalanan = new Paragraph("DETAIL PERJALANAN", fontSubJudul);
+                pPerjalanan.setSpacingAfter(8f);
+                document.add(pPerjalanan);
+                
+                PdfPTable tabelPerjalanan = new PdfPTable(2);
+                tabelPerjalanan.setWidthPercentage(100);
+                tabelPerjalanan.setWidths(new float[]{1, 4});
+                tabelPerjalanan.addCell(createKeyValueCell("Kereta Api", kereta + " (" + kelas + ")", fontHeader, fontIsi));
+                tabelPerjalanan.addCell(createKeyValueCell("Tanggal", tanggal, fontHeader, fontIsi));
+                tabelPerjalanan.addCell(createKeyValueCell("Rute", asal + " -> " + tujuan, fontHeader, fontIsi, 2));
+                document.add(tabelPerjalanan);
+
+                // === DETAIL PENUMPANG ===
+                document.add(new Paragraph(" "));
+                Paragraph pPenumpang = new Paragraph("DETAIL PENUMPANG", fontSubJudul);
+                pPenumpang.setSpacingAfter(8f);
+                document.add(pPenumpang);
+
+                PdfPTable tabelPenumpang = new PdfPTable(4);
+                tabelPenumpang.setWidthPercentage(100);
+                tabelPenumpang.setWidths(new float[]{3, 3, 1.5f, 2});
+                tabelPenumpang.addCell(createHeaderCell("Nama", oranyeKAI));
+                tabelPenumpang.addCell(createHeaderCell("No. Identitas (NIK)", oranyeKAI));
+                tabelPenumpang.addCell(createHeaderCell("Tipe", oranyeKAI));
+                tabelPenumpang.addCell(createHeaderCell("Kursi", oranyeKAI));
+
+                for (Penumpang p : daftarPenumpang) {
+                    tabelPenumpang.addCell(new Phrase(p.nama, fontIsiTabel));
+                    tabelPenumpang.addCell(new Phrase(p.nik, fontIsiTabel));
+                    tabelPenumpang.addCell(new Phrase(p.tipePenumpang, fontIsiTabel));
+                    tabelPenumpang.addCell(new Phrase("-", fontIsiTabel));
+                }
+                document.add(tabelPenumpang);
+                document.add(new Paragraph(" "));
+
+                document.add(new Paragraph("Terima kasih telah menggunakan layanan SEPOR. Selamat menikmati perjalanan Anda.", fontHeader));
+                
+                // Pesan sukses menampilkan path yang dipilih pengguna
+                JOptionPane.showMessageDialog(this, "File PDF berhasil dibuat di:\n" + fileToSave.getAbsolutePath(), "Cetak Berhasil", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Coba buka file PDF yang baru dibuat
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(fileToSave);
+                }
+
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Gagal membuat file PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                document.close();
+            }
         }
     }
     
-    // Method helper untuk membuat sel header tabel dengan warna
     private PdfPCell createHeaderCell(String text, Color background) {
         Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
@@ -325,7 +358,6 @@ public class FormOutput extends javax.swing.JFrame {
         return cell;
     }
     
-    // Method helper untuk membuat sel dengan format "Label: Isi"
     private PdfPCell createKeyValueCell(String label, String value, Font fontLabel, Font fontValue) {
         return createKeyValueCell(label, value, fontLabel, fontValue, 1);
     }

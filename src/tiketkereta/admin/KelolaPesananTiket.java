@@ -1,13 +1,35 @@
 package tiketkereta.admin;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import tiketkereta.Koneksi;
-import tiketkereta.Login;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 
 /**
@@ -25,7 +47,7 @@ public class KelolaPesananTiket extends javax.swing.JFrame {
         setLocationRelativeTo(this);
     }
 private void showData(){
-        Object[] baris = {"ID Pesanan", "User", "Rute", "Kereta", "Kelas", "Total Harga", "Tanggal Pesan"};
+        Object[] baris = {"ID Tiket", "Pemesan", "Rute", "Kereta", "Kelas", "Total Harga", "Tanggal Pesan"};
         tabModel = new DefaultTableModel(null, baris);
         jTablePesanan.setModel(tabModel);
         
@@ -56,6 +78,145 @@ private void showData(){
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+  private void tampilkanPreviewDanCetak() {
+        if (jTablePesanan.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk dicetak.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Buat komponen UI untuk dialog (dalam bentuk tabel)
+        // Membuat tabel baru yang menggunakan model data dari tabel utama
+        JTable previewTable = new JTable(jTablePesanan.getModel());
+        
+        // Menonaktifkan interaksi pada tabel preview (tidak bisa diedit/dipilih)
+        previewTable.setEnabled(false);
+        previewTable.getTableHeader().setReorderingAllowed(false);
+        previewTable.setFillsViewportHeight(true);
+        previewTable.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        
+        // Masukkan tabel ke dalam JScrollPane
+        JScrollPane scrollPane = new JScrollPane(previewTable);
+        scrollPane.setPreferredSize(new java.awt.Dimension(800, 400));
+
+        // Tampilkan JOptionPane dengan tombol custom
+        Object[] options = {"Lanjutkan Cetak", "Batal"};
+        int choice = JOptionPane.showOptionDialog(
+            this,
+            scrollPane,
+            "Preview Cetak Data",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        // Proses pilihan user
+        if (choice == JOptionPane.YES_OPTION) { // YES_OPTION adalah indeks 0 (tombol "Lanjutkan Cetak")
+            cetakDataKePDF(); // Panggil method cetak jika user setuju
+        }
+    }
+
+ private void cetakDataKePDF() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan Laporan sebagai PDF");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("File PDF", "pdf"));
+        String defaultFileName = "Laporan_Pesanan_Tiket_" + LocalDate.now().toString() + ".pdf";
+        fileChooser.setSelectedFile(new File(defaultFileName));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File fileToSave = fileChooser.getSelectedFile();
+        if (!fileToSave.getAbsolutePath().endsWith(".pdf")) {
+            fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
+        }
+
+        // Inisialisasi dokumen iText versi lama
+        Document document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
+
+        try {
+            // Membuat instance PdfWriter
+            PdfWriter.getInstance(document, new FileOutputStream(fileToSave));
+
+            // PENTING: Buka dokumen sebelum menambah konten
+            document.open();
+
+            // Membuat Font
+            Font fontJudul = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, Font.BOLD);
+            Font fontSubJudul = FontFactory.getFont(FontFactory.HELVETICA, 12);
+            Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Font.BOLD, Color.WHITE);
+            Font fontIsi = FontFactory.getFont(FontFactory.HELVETICA, 9);
+            
+            // Membuat Header Dokumen
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+            String tanggalCetak = LocalDate.now().format(formatter);
+            
+            Paragraph judul = new Paragraph("Laporan Data Pesanan Tiket Kereta", fontJudul);
+            judul.setAlignment(Element.ALIGN_CENTER);
+            
+            Paragraph subJudul = new Paragraph("Dicetak pada: " + tanggalCetak, fontSubJudul);
+            subJudul.setAlignment(Element.ALIGN_CENTER);
+            subJudul.setSpacingAfter(20);
+
+            document.add(judul);
+            document.add(subJudul);
+
+            // Membuat Tabel
+            PdfPTable table = new PdfPTable(jTablePesanan.getColumnCount());
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{5, 15, 20, 20, 10, 15, 15});
+            
+            // Membuat Header Tabel
+            PdfPCell headerCell = new PdfPCell();
+            headerCell.setBackgroundColor(new Color(255,153,51)); // Warna oranye seperti header GUI
+            headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            headerCell.setPadding(5);
+            
+            for (int col = 0; col < jTablePesanan.getColumnCount(); col++) {
+                headerCell.setPhrase(new Phrase(jTablePesanan.getColumnName(col), fontHeader));
+                table.addCell(headerCell);
+            }
+
+            // Menambahkan Isi Tabel dengan Zebra-Striping
+            Color warnaBaris1 = Color.WHITE;
+            Color warnaBaris2 = new Color(240, 240, 240); // Abu-abu muda
+
+            for (int row = 0; row < jTablePesanan.getRowCount(); row++) {
+                for (int col = 0; col < jTablePesanan.getColumnCount(); col++) {
+                    String cellValue = jTablePesanan.getValueAt(row, col) != null ? jTablePesanan.getValueAt(row, col).toString() : "";
+                    PdfPCell dataCell = new PdfPCell(new Phrase(cellValue, fontIsi));
+                    dataCell.setBackgroundColor(row % 2 == 0 ? warnaBaris1 : warnaBaris2);
+                    dataCell.setPadding(4);
+                    table.addCell(dataCell);
+                }
+            }
+
+            document.add(table);
+
+            JOptionPane.showMessageDialog(this, "Data berhasil dicetak ke PDF!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            // Buka file PDF secara otomatis
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(fileToSave);
+            }
+
+        } catch (DocumentException | FileNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal membuat PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal membuka file PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // PENTING: Selalu tutup dokumen
+            if (document.isOpen()) {
+                document.close();
+            }
         }
     }
     /**
@@ -186,7 +347,7 @@ private void showData(){
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCetakDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakDataActionPerformed
-    JOptionPane.showMessageDialog(this, "Fungsi cetak belum diimplementasikan.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+    tampilkanPreviewDanCetak(); 
   
     }//GEN-LAST:event_btnCetakDataActionPerformed
 
@@ -196,15 +357,8 @@ private void showData(){
     }//GEN-LAST:event_btnKembaliActionPerformed
 
     private void btnLihatDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatDetailActionPerformed
-       int selectedRow = jTablePesanan.getSelectedRow();
-        if(selectedRow == -1){
-            JOptionPane.showMessageDialog(this, "Pilih salah satu baris pesanan terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        String idPesanan = jTablePesanan.getValueAt(selectedRow, 0).toString();
-        new LihatDetailPesananTiket(Integer.parseInt(idPesanan)).setVisible(true);
-        this.dispose();
+       new LihatDetailPesananTiket().setVisible(true);
+       this.dispose();  
     }//GEN-LAST:event_btnLihatDetailActionPerformed
 
     /**

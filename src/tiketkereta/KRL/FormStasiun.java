@@ -1,64 +1,102 @@
 package tiketkereta.KRL;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.format.DateTimeFormatter;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import tiketkereta.Koneksi;
 import tiketkereta.MenuUtama;
 
 public class FormStasiun extends javax.swing.JFrame {
     private String namamhs, nim, noUrut;
-    private Map<String, String> jadwalMap = new HashMap<>();
     
     public FormStasiun(String namamhs, String nim, String noUrut) {
         this.namamhs = namamhs;
         this.nim = nim;
         this.noUrut = noUrut;
         initComponents();
-        isiJadwal();
-        isiComboBox();
+        isiComboBoxDariDB(); // Mengisi ComboBox dari database
+        setLocationRelativeTo(null);
     }
 
-private void isiJadwal() {
-    jadwalMap.put("Yogyakarta", "06:00 (Tujuan: Palur), 07:05 (Tujuan: Palur), 08:49 (Tujuan: Palur), 10:56 (Tujuan: Palur), 13:57 (Tujuan: Palur), 16:10 (Tujuan: Palur), 18:08 (Tujuan: Palur), 20:15 (Tujuan: Palur)");
-    
-    jadwalMap.put("Lempuyangan", "06:06 (Tujuan: Palur), 07:10 (Tujuan: Palur), 08:54 (Tujuan: Palur), 11:01 (Tujuan: Palur), 14:02 (Tujuan: Palur), 16:15 (Tujuan: Palur), 18:13 (Tujuan: Palur), 20:20 (Tujuan: Palur), 06:30 (Tujuan: Yogyakarta), 09:00 (Tujuan: Yogyakarta), 17:00 (Tujuan: Yogyakarta)");
-    
-    jadwalMap.put("Maguwo", "06:13 (Tujuan: Palur), 07:17 (Tujuan: Palur), 09:01 (Tujuan: Palur), 11:08 (Tujuan: Palur), 14:10 (Tujuan: Palur), 16:22 (Tujuan: Palur), 18:20 (Tujuan: Palur), 20:27 (Tujuan: Palur), 06:36 (Tujuan: Yogyakarta), 09:06 (Tujuan: Yogyakarta), 17:06 (Tujuan: Yogyakarta)");
-    
-    jadwalMap.put("Brambanan", "06:21 (Tujuan: Palur), 07:25 (Tujuan: Palur), 09:09 (Tujuan: Palur), 11:16 (Tujuan: Palur), 14:19 (Tujuan: Palur), 16:30 (Tujuan: Palur), 18:28 (Tujuan: Palur), 20:36 (Tujuan: Palur), 06:45 (Tujuan: Yogyakarta), 09:15 (Tujuan: Yogyakarta), 17:15 (Tujuan: Yogyakarta)");
-    
-    jadwalMap.put("Srowot", "06:28 (Tujuan: Palur), 07:32 (Tujuan: Palur), 09:16 (Tujuan: Palur), 11:23 (Tujuan: Palur), 14:26 (Tujuan: Palur), 16:37 (Tujuan: Palur), 18:35 (Tujuan: Palur), 20:43 (Tujuan: Palur), 06:52 (Tujuan: Yogyakarta), 09:22 (Tujuan: Yogyakarta), 17:22 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Klaten", "06:35 (Tujuan: Palur), 07:39 (Tujuan: Palur), 09:23 (Tujuan: Palur), 11:30 (Tujuan: Palur), 14:33 (Tujuan: Palur), 16:44 (Tujuan: Palur), 18:42 (Tujuan: Palur), 20:50 (Tujuan: Palur), 07:00 (Tujuan: Yogyakarta), 09:30 (Tujuan: Yogyakarta), 17:30 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Ceper", "06:44 (Tujuan: Palur), 07:48 (Tujuan: Palur), 09:32 (Tujuan: Palur), 11:39 (Tujuan: Palur), 14:42 (Tujuan: Palur), 16:53 (Tujuan: Palur), 18:51 (Tujuan: Palur), 20:59 (Tujuan: Palur), 07:08 (Tujuan: Yogyakarta), 09:38 (Tujuan: Yogyakarta), 17:38 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Delanggu", "06:51 (Tujuan: Palur), 07:55 (Tujuan: Palur), 09:39 (Tujuan: Palur), 11:46 (Tujuan: Palur), 14:49 (Tujuan: Palur), 17:00 (Tujuan: Palur), 18:58 (Tujuan: Palur), 21:06 (Tujuan: Palur), 07:15 (Tujuan: Yogyakarta), 09:45 (Tujuan: Yogyakarta), 17:45 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Gawok", "06:57 (Tujuan: Palur), 08:01 (Tujuan: Palur), 09:45 (Tujuan: Palur), 11:52 (Tujuan: Palur), 14:56 (Tujuan: Palur), 17:07 (Tujuan: Palur), 19:04 (Tujuan: Palur), 21:12 (Tujuan: Palur), 07:22 (Tujuan: Yogyakarta), 09:51 (Tujuan: Yogyakarta), 17:52 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Purwosari", "07:04 (Tujuan: Palur), 08:09 (Tujuan: Palur), 09:52 (Tujuan: Palur), 12:00 (Tujuan: Palur), 15:03 (Tujuan: Palur), 17:15 (Tujuan: Palur), 19:11 (Tujuan: Palur), 21:19 (Tujuan: Palur), 07:28 (Tujuan: Yogyakarta), 09:57 (Tujuan: Yogyakarta), 17:58 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Solo Balapan", "07:10 (Tujuan: Palur), 08:16 (Tujuan: Palur), 10:00 (Tujuan: Palur), 12:06 (Tujuan: Palur), 15:09 (Tujuan: Palur), 17:22 (Tujuan: Palur), 19:17 (Tujuan: Palur), 21:28 (Tujuan: Palur), 07:35 (Tujuan: Yogyakarta), 10:03 (Tujuan: Yogyakarta), 18:05 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Solo Jebres", "07:15 (Tujuan: Palur), 08:23 (Tujuan: Palur), 10:06 (Tujuan: Palur), 12:12 (Tujuan: Palur), 15:15 (Tujuan: Palur), 17:28 (Tujuan: Palur), 19:23 (Tujuan: Palur), 21:34 (Tujuan: Palur), 07:41 (Tujuan: Yogyakarta), 10:09 (Tujuan: Yogyakarta), 18:11 (Tujuan: Yogyakarta)");
-
-    jadwalMap.put("Palur", "07:20 (Tujuan: Yogyakarta), 08:29 (Tujuan: Yogyakarta), 10:12 (Tujuan: Yogyakarta), 12:18 (Tujuan: Yogyakarta), 15:21 (Tujuan: Yogyakarta), 17:35 (Tujuan: Yogyakarta), 19:28 (Tujuan: Yogyakarta), 21:40 (Tujuan: Yogyakarta)");
-}
-    
-    private void isiComboBox() {
+private void isiComboBoxDariDB() {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        for (String stasiun : jadwalMap.keySet()) {
-            model.addElement(stasiun);
-        }
-        jComboBox1.setModel(model);
+        String sql = "SELECT nama_stasiun FROM stasiun ORDER BY nama_stasiun ASC";
 
-        jComboBox1.addActionListener(e -> tampilkanJadwal());
+        try (Connection conn = Koneksi.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                model.addElement(rs.getString("nama_stasiun"));
+            }
+            jComboBox1.setModel(model);
+
+            // Tambahkan listener setelah ComboBox diisi
+            jComboBox1.addActionListener(e -> tampilkanJadwalDariDB());
+
+            // Tampilkan jadwal untuk item pertama secara otomatis
+            if (jComboBox1.getItemCount() > 0) {
+                jComboBox1.setSelectedIndex(0);
+                tampilkanJadwalDariDB();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal memuat daftar stasiun: " + e.getMessage(), "Error Database", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    private void tampilkanJadwal() {
-        String stasiun = (String) jComboBox1.getSelectedItem();
-        String jadwal = jadwalMap.getOrDefault(stasiun, "Tidak ada jadwal untuk stasiun ini.");
-        jTextArea1.setText("Jadwal KRL di stasiun " + stasiun + ":\n" + jadwal.replaceAll(", ", "\n"));
+
+    /**
+     * Menampilkan jadwal untuk stasiun yang dipilih di JComboBox.
+     */
+    private void tampilkanJadwalDariDB() {
+        String stasiunDipilih = (String) jComboBox1.getSelectedItem();
+        if (stasiunDipilih == null) {
+            return; // Keluar jika tidak ada item yang dipilih
+        }
+
+        jTextArea1.setText("Memuat jadwal untuk stasiun " + stasiunDipilih + "...");
+
+        StringBuilder jadwalText = new StringBuilder();
+        jadwalText.append("Jadwal KRL di stasiun ").append(stasiunDipilih).append(":\n");
+
+        String sql = "SELECT j.waktu, j.tujuan "
+                   + "FROM jadwal_krl j "
+                   + "JOIN stasiun s ON j.id_stasiun = s.id_stasiun "
+                   + "WHERE s.nama_stasiun = ? "
+                   + "ORDER BY j.waktu ASC";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        try (Connection conn = Koneksi.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, stasiunDipilih);
+            ResultSet rs = ps.executeQuery();
+
+            boolean adaJadwal = false;
+            while (rs.next()) {
+                adaJadwal = true;
+                String waktu = rs.getTime("waktu").toLocalTime().format(formatter);
+                String tujuan = rs.getString("tujuan");
+                jadwalText.append(waktu).append(" (Tujuan: ").append(tujuan).append(")\n");
+            }
+
+            if (!adaJadwal) {
+                jTextArea1.setText("Tidak ada jadwal yang tersedia untuk stasiun " + stasiunDipilih);
+            } else {
+                jTextArea1.setText(jadwalText.toString());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Gagal memuat jadwal: " + e.getMessage(), "Error Database", JOptionPane.ERROR_MESSAGE);
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

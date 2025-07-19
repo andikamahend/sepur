@@ -1,6 +1,7 @@
 package tiketkereta.KAJJ;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+
 public class FormDataPenumpang extends javax.swing.JFrame { 
     String noUrut, nim, nama;
     String asal, tujuan, tanggal, kereta, kelas;
@@ -134,7 +135,7 @@ public FormDataPenumpang(
         buttonGroup1.add(rbtnBayi);
         rbtnBayi.setText("Bayi");
 
-        btnkembali.setText("Keluar");
+        btnkembali.setText("Kembali");
         btnkembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnkembaliActionPerformed(evt);
@@ -327,7 +328,8 @@ public FormDataPenumpang(
     }//GEN-LAST:event_txtusiaActionPerformed
 
     private void btnkembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnkembaliActionPerformed
-        this.dispose();
+    new FormPilihKereta(asal, tujuan, tanggal, dewasa, bayi, noUrut, nim, nama).setVisible(true);
+    this.dispose();
     }//GEN-LAST:event_btnkembaliActionPerformed
 
     /**
