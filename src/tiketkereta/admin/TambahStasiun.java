@@ -1,4 +1,5 @@
 package tiketkereta.admin;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import tiketkereta.Koneksi;
 
 public class TambahStasiun extends javax.swing.JFrame { 
     private int selectedStasiunId = -1;
+    
     public TambahStasiun() {
         initComponents();
         tampilkanData();
@@ -53,7 +55,7 @@ public class TambahStasiun extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tiketkereta.ImagePanel(new javax.swing.ImageIcon(getClass().getResource("/bg_admin.jpg")).getImage());
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnStasiun = new javax.swing.JButton();
@@ -68,11 +70,9 @@ public class TambahStasiun extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU TAMBAH STASIUN");
 
@@ -93,6 +93,9 @@ public class TambahStasiun extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
+        btnStasiun.setBackground(new java.awt.Color(255, 102, 0));
+        btnStasiun.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnStasiun.setForeground(new java.awt.Color(255, 255, 255));
         btnStasiun.setText("Tambah Stasiun");
         btnStasiun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +103,9 @@ public class TambahStasiun extends javax.swing.JFrame {
             }
         });
 
+        btnEditStasiun.setBackground(new java.awt.Color(255, 102, 0));
+        btnEditStasiun.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditStasiun.setForeground(new java.awt.Color(255, 255, 255));
         btnEditStasiun.setText("Edit Stasiun");
         btnEditStasiun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -107,6 +113,9 @@ public class TambahStasiun extends javax.swing.JFrame {
             }
         });
 
+        btnHapusStasiun.setBackground(new java.awt.Color(255, 0, 0));
+        btnHapusStasiun.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapusStasiun.setForeground(new java.awt.Color(255, 255, 255));
         btnHapusStasiun.setText("Hapus Stasiun");
         btnHapusStasiun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,6 +123,9 @@ public class TambahStasiun extends javax.swing.JFrame {
             }
         });
 
+        btnBersihkan.setBackground(new java.awt.Color(255, 102, 0));
+        btnBersihkan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBersihkan.setForeground(new java.awt.Color(255, 255, 255));
         btnBersihkan.setText("Bersihkan");
         btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,6 +133,9 @@ public class TambahStasiun extends javax.swing.JFrame {
             }
         });
 
+        btnKembali.setBackground(new java.awt.Color(0, 0, 255));
+        btnKembali.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKembali.setForeground(new java.awt.Color(255, 255, 255));
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +150,7 @@ public class TambahStasiun extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Nama Stasiun");
 
         jTableKereta.setModel(new javax.swing.table.DefaultTableModel(
@@ -168,21 +184,22 @@ public class TambahStasiun extends javax.swing.JFrame {
                         .addGap(54, 54, 54)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNamaStasiun, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnStasiun)
-                                .addGap(34, 34, 34)
-                                .addComponent(btnEditStasiun)
-                                .addGap(35, 35, 35)
-                                .addComponent(btnHapusStasiun)
-                                .addGap(41, 41, 41)
-                                .addComponent(btnBersihkan)
-                                .addGap(36, 36, 36)
-                                .addComponent(btnKembali)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnStasiun)
+                                        .addGap(34, 34, 34)
+                                        .addComponent(btnEditStasiun)
+                                        .addGap(32, 32, 32)
+                                        .addComponent(btnBersihkan)
+                                        .addGap(41, 41, 41)
+                                        .addComponent(btnHapusStasiun)
+                                        .addGap(39, 39, 39)
+                                        .addComponent(btnKembali))
+                                    .addComponent(txtNamaStasiun, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -198,11 +215,11 @@ public class TambahStasiun extends javax.swing.JFrame {
                     .addComponent(btnStasiun)
                     .addComponent(btnEditStasiun)
                     .addComponent(btnHapusStasiun)
-                    .addComponent(btnBersihkan)
-                    .addComponent(btnKembali))
+                    .addComponent(btnKembali)
+                    .addComponent(btnBersihkan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 82, Short.MAX_VALUE))
+                .addGap(0, 77, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,16 +243,16 @@ public class TambahStasiun extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNamaStasiunActionPerformed
 
     private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
-     new AdminMenu().setVisible(true);
-        this.dispose();  
+        new AdminMenu().setVisible(true);
+            this.dispose();  
     }//GEN-LAST:event_btnKembaliActionPerformed
 
     private void btnBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihkanActionPerformed
-     bersihkan();
+        bersihkan();
     }//GEN-LAST:event_btnBersihkanActionPerformed
 
     private void btnHapusStasiunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusStasiunActionPerformed
-         if (selectedStasiunId == -1) {
+        if (selectedStasiunId == -1) {
             JOptionPane.showMessageDialog(this, "Silakan pilih stasiun yang ingin dihapus.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -264,7 +281,7 @@ public class TambahStasiun extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHapusStasiunActionPerformed
 
     private void btnEditStasiunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditStasiunActionPerformed
-       if (selectedStasiunId == -1) {
+        if (selectedStasiunId == -1) {
             JOptionPane.showMessageDialog(this, "Silakan pilih stasiun yang ingin diubah.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -296,7 +313,7 @@ public class TambahStasiun extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditStasiunActionPerformed
 
     private void btnStasiunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStasiunActionPerformed
-       String namaStasiun = txtNamaStasiun.getText().trim();
+        String namaStasiun = txtNamaStasiun.getText().trim();
         if (namaStasiun.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nama stasiun tidak boleh kosong.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
@@ -319,7 +336,7 @@ public class TambahStasiun extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStasiunActionPerformed
 
     private void jTableKeretaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKeretaMouseClicked
-      int baris = jTableKereta.rowAtPoint(evt.getPoint());
+        int baris = jTableKereta.rowAtPoint(evt.getPoint());
         if (baris < 0) return;
 
         selectedStasiunId = (int) jTableKereta.getValueAt(baris, 0);
@@ -328,9 +345,6 @@ public class TambahStasiun extends javax.swing.JFrame {
         txtNamaStasiun.setText(namaStasiun);
     }//GEN-LAST:event_jTableKeretaMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
      try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -348,10 +362,6 @@ public class TambahStasiun extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(TambahStasiun.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

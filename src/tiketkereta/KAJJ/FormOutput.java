@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -122,36 +121,43 @@ public class FormOutput extends javax.swing.JFrame {
     /**
      * Menampilkan rincian lengkap pemesanan di JTextArea.
      */
-    private void tampilkanOutput() {
-        int hargaPerOrang = hitungTotalHarga(kereta, kelas, daftarPenumpang);
+private void tampilkanOutput() {
+    int hargaPerOrang = hitungTotalHarga(kereta, kelas, daftarPenumpang);
 
-        txtOutput.setText("");
-        txtOutput.append("Mahasiswa: " + namaMhs + " | NIM: " + nim + " | ID User: " + idUser + "\n");
-        txtOutput.append("=======================================\n");
-        txtOutput.append("      CETAK TIKET PEMESANAN KERETA\n");
-        txtOutput.append("=======================================\n");
-        txtOutput.append("Rute         : " + asal + " -> " + tujuan + "\n");
-        txtOutput.append("Tanggal      : " + tanggal + "\n");
-        txtOutput.append("Kereta       : " + kereta + "\n");
-        txtOutput.append("Kelas        : " + kelas + "\n");
-        txtOutput.append("---------------------------------------\n");
-        
-        for (int i = 0; i < daftarPenumpang.size(); i++) {
-            Penumpang p = daftarPenumpang.get(i);
-            txtOutput.append("Penumpang " + (i + 1) + ":\n");
-            txtOutput.append("Nama         : " + p.nama + "\n");
-            txtOutput.append("NIK          : " + p.nik + "\n");
-            txtOutput.append("Jenis Kelamin: " + p.jenisKelamin + "\n");
-            txtOutput.append("Usia         : " + p.usia + " tahun\n");
-            txtOutput.append("Tipe         : " + p.tipePenumpang + "\n");
-            txtOutput.append("---------------------------------------\n");
-        }
-        
-        txtOutput.append("Total Penumpang : " + daftarPenumpang.size() + "\n");
-        txtOutput.append("Harga per Orang : Rp" + hargaPerOrang + "\n");
-        txtOutput.append(rincianDiskon + "\n");
-        txtOutput.append("TOTAL BAYAR     : Rp" + totalHargaFinal + "\n");
+    // Set font menggunakan Font dari AWT dengan safety fallback
+    java.awt.Font fontMono = new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 12);
+    txtOutput.setFont(fontMono);
+
+    // Mulai menampilkan output
+    StringBuilder sb = new StringBuilder();
+    sb.append("=====================================================\n");
+    sb.append("                 CETAK TIKET KERETA API              \n");
+    sb.append("=====================================================\n");
+    sb.append(String.format("Rute    : %-15s -> %-15s\n", asal, tujuan));
+    sb.append(String.format("Tanggal : %-10s\n", tanggal));
+    sb.append(String.format("Kereta  : %-15s Kelas: %s\n", kereta, kelas));
+    sb.append("-----------------------------------------------------\n");
+
+    for (int i = 0; i < daftarPenumpang.size(); i++) {
+        Penumpang p = daftarPenumpang.get(i);
+        sb.append(String.format("Penumpang %d\n", i + 1));
+        sb.append(String.format("Nama         : %-25s\n", p.nama));
+        sb.append(String.format("NIK          : %-25s\n", p.nik));
+        sb.append(String.format("Jenis Kelamin: %-10s\n", p.jenisKelamin));
+        sb.append(String.format("Usia         : %-3d tahun\n", p.usia));
+        sb.append(String.format("Tipe         : %-10s\n", p.tipePenumpang));
+        sb.append("-----------------------------------------------------\n");
     }
+
+    sb.append(String.format("Total Penumpang : %d\n", daftarPenumpang.size()));
+    sb.append(String.format("Harga per Orang : Rp %,d\n", hargaPerOrang));
+    sb.append(String.format("%s\n", rincianDiskon));
+    sb.append(String.format("TOTAL BAYAR     : Rp %,d\n", totalHargaFinal));
+
+    // Tampilkan di txtOutput
+    txtOutput.setText(sb.toString());
+}
+
     
     private int getIdDariNama(String query, String nama) throws SQLException {
         try (Connection conn = Koneksi.getConnection();
@@ -313,20 +319,19 @@ public class FormOutput extends javax.swing.JFrame {
                 pPenumpang.setSpacingAfter(8f);
                 document.add(pPenumpang);
 
-                PdfPTable tabelPenumpang = new PdfPTable(4);
+                PdfPTable tabelPenumpang = new PdfPTable(3);
                 tabelPenumpang.setWidthPercentage(100);
-                tabelPenumpang.setWidths(new float[]{3, 3, 1.5f, 2});
+                tabelPenumpang.setWidths(new float[]{3, 3, 1.5f});
                 tabelPenumpang.addCell(createHeaderCell("Nama", oranyeKAI));
                 tabelPenumpang.addCell(createHeaderCell("No. Identitas (NIK)", oranyeKAI));
                 tabelPenumpang.addCell(createHeaderCell("Tipe", oranyeKAI));
-                tabelPenumpang.addCell(createHeaderCell("Kursi", oranyeKAI));
 
                 for (Penumpang p : daftarPenumpang) {
                     tabelPenumpang.addCell(new Phrase(p.nama, fontIsiTabel));
                     tabelPenumpang.addCell(new Phrase(p.nik, fontIsiTabel));
                     tabelPenumpang.addCell(new Phrase(p.tipePenumpang, fontIsiTabel));
-                    tabelPenumpang.addCell(new Phrase("-", fontIsiTabel));
                 }
+
                 document.add(tabelPenumpang);
                 document.add(new Paragraph(" "));
 
@@ -380,28 +385,54 @@ public class FormOutput extends javax.swing.JFrame {
         txtOutput = new javax.swing.JTextArea();
         BKembali = new javax.swing.JButton();
         Bprint = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         txtOutput.setBackground(new java.awt.Color(204, 204, 204));
         txtOutput.setColumns(20);
-        txtOutput.setForeground(new java.awt.Color(153, 153, 255));
         txtOutput.setRows(5);
+        txtOutput.setBorder(new javax.swing.border.MatteBorder(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/batik.png")))); // NOI18N
         jScrollPane1.setViewportView(txtOutput);
 
-        BKembali.setText("Kembali");
+        BKembali.setText("KEMBALI");
         BKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BKembaliActionPerformed(evt);
             }
         });
 
-        Bprint.setText("Print");
+        Bprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/KAJJ/print.png"))); // NOI18N
+        Bprint.setBorder(null);
+        Bprint.setContentAreaFilled(false);
         Bprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BprintActionPerformed(evt);
             }
         });
+
+        jPanel1.setBackground(new java.awt.Color(255, 0, 0));
+
+        jLabel1.setFont(new java.awt.Font("High Tower Text", 1, 48)); // NOI18N
+        jLabel1.setText("RIWAYAT");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(138, 138, 138)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel1)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -409,22 +440,32 @@ public class FormOutput extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 710, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BKembali)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Bprint)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(BKembali)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Bprint)
+                .addGap(32, 32, 32))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BKembali)
-                    .addComponent(Bprint))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Bprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(BKembali)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -473,6 +514,8 @@ public class FormOutput extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BKembali;
     private javax.swing.JButton Bprint;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txtOutput;
     // End of variables declaration//GEN-END:variables

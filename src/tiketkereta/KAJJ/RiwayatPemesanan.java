@@ -73,6 +73,7 @@ public class RiwayatPemesanan extends javax.swing.JFrame {
         tabelRiwayat = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(new java.awt.Dimension(1920, 1080));
 
         jPanel1.setBackground(new java.awt.Color(255, 0, 51));
 
@@ -109,6 +110,8 @@ public class RiwayatPemesanan extends javax.swing.JFrame {
                 BlihatDActionPerformed(evt);
             }
         });
+
+        jScrollPane1.setBorder(new javax.swing.border.MatteBorder(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/batik.png")))); // NOI18N
 
         tabelRiwayat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.time.format.DateTimeFormatter;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import tiketkereta.Koneksi;
 import tiketkereta.MenuUtama;
 
@@ -22,8 +23,7 @@ public class FormStasiun extends javax.swing.JFrame {
         isiComboBoxDariDB(); // Mengisi ComboBox dari database
         setLocationRelativeTo(null);
     }
-
-private void isiComboBoxDariDB() {
+    private void isiComboBoxDariDB() {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         String sql = "SELECT nama_stasiun FROM stasiun ORDER BY nama_stasiun ASC";
 
@@ -52,7 +52,8 @@ private void isiComboBoxDariDB() {
     }
 
     /**
-     * Menampilkan jadwal untuk stasiun yang dipilih di JComboBox.
+     * DIUBAH: Seluruh metode ini diubah untuk menampilkan data ke JTable
+     * Menampilkan jadwal untuk stasiun yang dipilih di JComboBox ke dalam JTable.
      */
     private void tampilkanJadwalDariDB() {
         String stasiunDipilih = (String) jComboBox1.getSelectedItem();
@@ -60,11 +61,12 @@ private void isiComboBoxDariDB() {
             return; // Keluar jika tidak ada item yang dipilih
         }
 
-        jTextArea1.setText("Memuat jadwal untuk stasiun " + stasiunDipilih + "...");
+        // 1. Siapkan model untuk tabel
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("Waktu Keberangkatan");
+        tableModel.addColumn("Tujuan");
 
-        StringBuilder jadwalText = new StringBuilder();
-        jadwalText.append("Jadwal KRL di stasiun ").append(stasiunDipilih).append(":\n");
-
+        // 2. Query ke database
         String sql = "SELECT j.waktu, j.tujuan "
                    + "FROM jadwal_krl j "
                    + "JOIN stasiun s ON j.id_stasiun = s.id_stasiun "
@@ -80,17 +82,20 @@ private void isiComboBoxDariDB() {
             ResultSet rs = ps.executeQuery();
 
             boolean adaJadwal = false;
+            // 3. Isi model dengan data dari ResultSet
             while (rs.next()) {
                 adaJadwal = true;
                 String waktu = rs.getTime("waktu").toLocalTime().format(formatter);
                 String tujuan = rs.getString("tujuan");
-                jadwalText.append(waktu).append(" (Tujuan: ").append(tujuan).append(")\n");
+                tableModel.addRow(new Object[]{waktu, tujuan}); // Tambahkan sebagai baris baru
             }
 
+            // 4. Set model ke JTable
+            jTable1.setModel(tableModel);
+
             if (!adaJadwal) {
-                jTextArea1.setText("Tidak ada jadwal yang tersedia untuk stasiun " + stasiunDipilih);
-            } else {
-                jTextArea1.setText(jadwalText.toString());
+                 // Beri tahu pengguna jika tidak ada jadwal
+                JOptionPane.showMessageDialog(this, "Tidak ada jadwal yang tersedia untuk stasiun " + stasiunDipilih, "Informasi", JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (SQLException e) {
@@ -107,9 +112,9 @@ private void isiComboBoxDariDB() {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -151,16 +156,27 @@ private void isiComboBoxDariDB() {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         jButton1.setText("Kembali");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        jScrollPane2.setBorder(new javax.swing.border.MatteBorder(new javax.swing.ImageIcon(getClass().getResource("/tiketkereta/batik.png")))); // NOI18N
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -169,10 +185,10 @@ private void isiComboBoxDariDB() {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                         .addComponent(jButton1)))
                 .addContainerGap())
         );
@@ -182,9 +198,8 @@ private void isiComboBoxDariDB() {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -252,7 +267,7 @@ private void isiComboBoxDariDB() {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

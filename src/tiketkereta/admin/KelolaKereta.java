@@ -1,4 +1,5 @@
 package tiketkereta.admin;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tiketkereta.Koneksi;
-import tiketkereta.Login;
+
 
 public class KelolaKereta extends javax.swing.JFrame {
         DefaultTableModel tabModel;
@@ -21,7 +22,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         setLocationRelativeTo(this);
     }
     
-     private void loadKereta(){
+    private void loadKereta(){
         comboModel = new DefaultComboBoxModel<>();
         cbKereta.setModel(comboModel);
         
@@ -39,7 +40,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         }
     }
     
-     private void showData(){
+    private void showData(){
         Object[] baris = {"ID Kelas", "Kereta", "Kelas", "Harga"};
         tabModel = new DefaultTableModel(null, baris);
         jTableKelas.setModel(tabModel);
@@ -64,16 +65,16 @@ public class KelolaKereta extends javax.swing.JFrame {
         }
     }
      
-     private void clear(){
+    private void clear(){
          txtHarga.setText("");
          cbKereta.setSelectedIndex(0);
          buttonGroup1.clearSelection(); // Membersihkan pilihan radio button
          jTableKelas.clearSelection();
          selectedKelasId = null;
          btnKelasKereta.setEnabled(true);
-     }
+    }
      
-     private int getIdKeretaByName(String namaKereta) throws SQLException{
+    private int getIdKeretaByName(String namaKereta) throws SQLException{
          Connection conn = Koneksi.getConnection();
          String sql = "SELECT id_kereta FROM kereta WHERE nama_kereta = ?";
          PreparedStatement ps = conn.prepareStatement(sql);
@@ -81,9 +82,9 @@ public class KelolaKereta extends javax.swing.JFrame {
          ResultSet rs = ps.executeQuery();
          if(rs.next()){
              return rs.getInt("id_kereta");
-         }
+        }
          return 0;
-     }
+    }
 
  
     @SuppressWarnings("unchecked")
@@ -91,7 +92,7 @@ public class KelolaKereta extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tiketkereta.ImagePanel(new javax.swing.ImageIcon(getClass().getResource("/bg_admin.jpg")).getImage());
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnKelasKereta = new javax.swing.JButton();
@@ -112,11 +113,9 @@ public class KelolaKereta extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU KELOLA KERETA");
 
@@ -124,19 +123,22 @@ public class KelolaKereta extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(305, 305, 305)
                 .addComponent(jLabel1)
-                .addGap(236, 236, 236))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
                 .addComponent(jLabel1)
-                .addGap(14, 14, 14))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
+        btnKelasKereta.setBackground(new java.awt.Color(255, 102, 0));
+        btnKelasKereta.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKelasKereta.setForeground(new java.awt.Color(255, 255, 255));
         btnKelasKereta.setText("Tambah Kelas Kereta ");
         btnKelasKereta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,6 +146,9 @@ public class KelolaKereta extends javax.swing.JFrame {
             }
         });
 
+        btnEditKelas.setBackground(new java.awt.Color(255, 102, 0));
+        btnEditKelas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditKelas.setForeground(new java.awt.Color(255, 255, 255));
         btnEditKelas.setText("Edit Kelas Kereta");
         btnEditKelas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,6 +156,9 @@ public class KelolaKereta extends javax.swing.JFrame {
             }
         });
 
+        btnHapusKelas.setBackground(new java.awt.Color(255, 0, 0));
+        btnHapusKelas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapusKelas.setForeground(new java.awt.Color(255, 255, 255));
         btnHapusKelas.setText("Hapus Kelas Kereta");
         btnHapusKelas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,6 +166,9 @@ public class KelolaKereta extends javax.swing.JFrame {
             }
         });
 
+        btnBersihkan.setBackground(new java.awt.Color(255, 102, 0));
+        btnBersihkan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBersihkan.setForeground(new java.awt.Color(255, 255, 255));
         btnBersihkan.setText("Bersihkan");
         btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,6 +176,9 @@ public class KelolaKereta extends javax.swing.JFrame {
             }
         });
 
+        btnKembali.setBackground(new java.awt.Color(0, 0, 255));
+        btnKembali.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKembali.setForeground(new java.awt.Color(255, 255, 255));
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,6 +187,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Pilih Kereta");
 
         txtHarga.addActionListener(new java.awt.event.ActionListener() {
@@ -182,9 +197,11 @@ public class KelolaKereta extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Kelas");
 
         buttonGroup1.add(rbEkonomi);
+        rbEkonomi.setForeground(new java.awt.Color(255, 255, 255));
         rbEkonomi.setText("Ekonomi");
         rbEkonomi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,6 +210,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(rbBisnis);
+        rbBisnis.setForeground(new java.awt.Color(255, 255, 255));
         rbBisnis.setText("Bisnis");
         rbBisnis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,6 +219,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(rbEksekutif);
+        rbEksekutif.setForeground(new java.awt.Color(255, 255, 255));
         rbEksekutif.setText("Eksekutif");
         rbEksekutif.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +228,7 @@ public class KelolaKereta extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Harga");
 
         jTableKelas.setModel(new javax.swing.table.DefaultTableModel(
@@ -242,39 +262,40 @@ public class KelolaKereta extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(cbKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnKelasKereta))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(btnEditKelas)
-                        .addGap(35, 35, 35)
-                        .addComponent(btnHapusKelas)
-                        .addGap(41, 41, 41)
-                        .addComponent(btnBersihkan)
-                        .addGap(36, 36, 36)
-                        .addComponent(btnKembali)
-                        .addGap(18, 18, 18))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(205, 205, 205)
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cbKereta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnKelasKereta))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(btnEditKelas)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnBersihkan)
+                                .addGap(35, 35, 35)
+                                .addComponent(btnHapusKelas)
+                                .addGap(36, 36, 36)
+                                .addComponent(btnKembali)
+                                .addGap(18, 18, 18))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbEkonomi)
-                                .addGap(15, 15, 15)
-                                .addComponent(rbBisnis)
-                                .addGap(18, 18, 18)
-                                .addComponent(rbEksekutif))
-                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(205, 205, 205)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(rbEkonomi)
+                                        .addGap(15, 15, 15)
+                                        .addComponent(rbBisnis)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(rbEksekutif))
+                                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,11 +323,11 @@ public class KelolaKereta extends javax.swing.JFrame {
                     .addComponent(btnKelasKereta)
                     .addComponent(btnEditKelas)
                     .addComponent(btnHapusKelas)
-                    .addComponent(btnBersihkan)
-                    .addComponent(btnKembali))
+                    .addComponent(btnKembali)
+                    .addComponent(btnBersihkan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -370,7 +391,7 @@ public class KelolaKereta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBersihkanActionPerformed
 
     private void btnEditKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditKelasActionPerformed
-       if (selectedKelasId == null) {
+        if (selectedKelasId == null) {
             JOptionPane.showMessageDialog(this, "Pilih data yang akan diupdate!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -465,7 +486,7 @@ public class KelolaKereta extends javax.swing.JFrame {
     }//GEN-LAST:event_rbEksekutifActionPerformed
 
     private void jTableKelasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKelasMouseClicked
-       int row = jTableKelas.getSelectedRow();
+        int row = jTableKelas.getSelectedRow();
         if (row == -1) return;
 
         selectedKelasId = jTableKelas.getValueAt(row, 0).toString();
@@ -488,9 +509,6 @@ public class KelolaKereta extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbKeretaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

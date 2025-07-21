@@ -14,32 +14,31 @@ public class KelolaJadwalKRL extends javax.swing.JFrame {
     private String sql;
     private int selectedJadwalId = -1;
     
-public KelolaJadwalKRL() {
-     initComponents();
-        // Method koneksi() dihapus, karena kita akan menggunakan class Koneksi
-        loadStasiunToComboBox(); // Muat data stasiun ke ComboBox
-        tampilkanData(); // Panggil method untuk menampilkan data
-        bersihkan(); // Bersihkan form saat pertama kali dibuka
-        this.setLocationRelativeTo(null); 
-}
+    public KelolaJadwalKRL() {
+         initComponents();
+            loadStasiunToComboBox(); // Muat data stasiun ke ComboBox
+            tampilkanData(); // Panggil method untuk menampilkan data
+            bersihkan(); // Bersihkan form saat pertama kali dibuka
+            this.setLocationRelativeTo(null); 
+    }
 
-private void loadStasiunToComboBox() {
-        sql = "SELECT nama_stasiun FROM stasiun ORDER BY nama_stasiun ASC";
-        // Menggunakan try-with-resources untuk memastikan koneksi dan statement ditutup
-        try (Connection conn = Koneksi.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet res = stmt.executeQuery(sql)) {
-            
-            cbAsal.removeAllItems(); // Bersihkan item lama
-            cbTujuan.removeAllItems(); // Bersihkan item lama
-            while(res.next()){
-                String namaStasiun = res.getString("nama_stasiun");
-                cbAsal.addItem(namaStasiun);
-                cbTujuan.addItem(namaStasiun);
+    private void loadStasiunToComboBox() {
+            sql = "SELECT nama_stasiun FROM stasiun ORDER BY nama_stasiun ASC";
+            // Menggunakan try-with-resources untuk memastikan koneksi dan statement ditutup
+            try (Connection conn = Koneksi.getConnection();
+                 Statement stmt = conn.createStatement();
+                 ResultSet res = stmt.executeQuery(sql)) {
+
+                cbAsal.removeAllItems(); // Bersihkan item lama
+                cbTujuan.removeAllItems(); // Bersihkan item lama
+                while(res.next()){
+                    String namaStasiun = res.getString("nama_stasiun");
+                    cbAsal.addItem(namaStasiun);
+                    cbTujuan.addItem(namaStasiun);
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Gagal memuat data stasiun: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal memuat data stasiun: " + e.getMessage());
-        }
     }
 
     // Method untuk menampilkan data dari database ke JTable
@@ -101,12 +100,11 @@ private void loadStasiunToComboBox() {
         return id;
     }
 
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tiketkereta.ImagePanel(new javax.swing.ImageIcon(getClass().getResource("/bg_admin.jpg")).getImage());
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnJadwal = new javax.swing.JButton();
@@ -125,13 +123,11 @@ private void loadStasiunToComboBox() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
 
-        jPanel2.setBackground(new java.awt.Color(255, 153, 51));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("MENU KELOLA JADWAL KERETA KRL");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -140,7 +136,7 @@ private void loadStasiunToComboBox() {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(256, 256, 256))
+                .addGap(204, 204, 204))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,6 +147,9 @@ private void loadStasiunToComboBox() {
         );
 
         btnJadwal.setText("Tambah Jadwal");
+        btnJadwal.setBackground(new java.awt.Color(255, 102, 0));
+        btnJadwal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnJadwal.setForeground(new java.awt.Color(255, 255, 255));
         btnJadwal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnJadwalActionPerformed(evt);
@@ -158,6 +157,9 @@ private void loadStasiunToComboBox() {
         });
 
         btnEditJadwal.setText("Edit Jadwal");
+        btnEditJadwal.setBackground(new java.awt.Color(255, 102, 0));
+        btnEditJadwal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEditJadwal.setForeground(new java.awt.Color(255, 255, 255));
         btnEditJadwal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditJadwalActionPerformed(evt);
@@ -165,6 +167,9 @@ private void loadStasiunToComboBox() {
         });
 
         btnHapusJadwal.setText("Hapus Jadwal");
+        btnHapusJadwal.setBackground(new java.awt.Color(255, 0, 0));
+        btnHapusJadwal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnHapusJadwal.setForeground(new java.awt.Color(255, 255, 255));
         btnHapusJadwal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHapusJadwalActionPerformed(evt);
@@ -172,6 +177,9 @@ private void loadStasiunToComboBox() {
         });
 
         btnBersihkan.setText("Bersihkan");
+        btnBersihkan.setBackground(new java.awt.Color(255, 102, 0));
+        btnBersihkan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBersihkan.setForeground(new java.awt.Color(255, 255, 255));
         btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBersihkanActionPerformed(evt);
@@ -179,14 +187,18 @@ private void loadStasiunToComboBox() {
         });
 
         btnKembali.setText("Kembali");
+        btnKembali.setBackground(new java.awt.Color(0, 0, 255));
+        btnKembali.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnKembali.setForeground(new java.awt.Color(255, 255, 255));
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnKembaliActionPerformed(evt);
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Stasiun Asal");
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
 
         jTableKereta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -206,11 +218,16 @@ private void loadStasiunToComboBox() {
         });
         jScrollPane1.setViewportView(jTableKereta);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Stasiun Tujuan");
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Waktu Berangkat");
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+
+        timePicker1.setBackground(new java.awt.Color(255, 255, 255));
 
         cbAsal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,62 +243,63 @@ private void loadStasiunToComboBox() {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnJadwal)
-                                .addGap(34, 34, 34)
-                                .addComponent(btnEditJadwal)
-                                .addGap(35, 35, 35)
-                                .addComponent(btnHapusJadwal)
-                                .addGap(41, 41, 41)
-                                .addComponent(btnBersihkan)
-                                .addGap(36, 36, 36)
-                                .addComponent(btnKembali)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(cbTujuan, 0, 141, Short.MAX_VALUE)
+                                .addGap(58, 58, 58)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbAsal, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(cbTujuan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(240, 240, 240)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                                    .addComponent(timePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(174, 174, 174)))))
-                .addContainerGap())
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(173, 173, 173)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnJadwal)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnEditJadwal)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnBersihkan)
+                        .addGap(44, 44, 44)
+                        .addComponent(btnHapusJadwal)
+                        .addGap(40, 40, 40)
+                        .addComponent(btnKembali)
+                        .addGap(27, 27, 27))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
                         .addComponent(jLabel5)
                         .addGap(12, 12, 12)
-                        .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE))
+                        .addComponent(cbAsal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
-                        .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(99, 99, 99)))
+                        .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(cbTujuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnJadwal)
                     .addComponent(btnEditJadwal)
-                    .addComponent(btnHapusJadwal)
                     .addComponent(btnBersihkan)
-                    .addComponent(btnKembali))
+                    .addComponent(btnKembali)
+                    .addComponent(btnHapusJadwal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -313,7 +331,7 @@ private void loadStasiunToComboBox() {
     }//GEN-LAST:event_btnBersihkanActionPerformed
 
     private void btnHapusJadwalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusJadwalActionPerformed
- if (selectedJadwalId == -1) {
+        if (selectedJadwalId == -1) {
             JOptionPane.showMessageDialog(this, "Silakan pilih jadwal yang ingin dihapus terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -342,7 +360,7 @@ private void loadStasiunToComboBox() {
     }//GEN-LAST:event_btnHapusJadwalActionPerformed
 
     private void btnEditJadwalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditJadwalActionPerformed
-      if (selectedJadwalId == -1) {
+        if (selectedJadwalId == -1) {
             JOptionPane.showMessageDialog(this, "Silakan pilih jadwal yang ingin diubah terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -385,7 +403,7 @@ private void loadStasiunToComboBox() {
     }//GEN-LAST:event_btnEditJadwalActionPerformed
 
     private void btnJadwalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJadwalActionPerformed
-       if (cbAsal.getSelectedIndex() == -1 || cbTujuan.getSelectedIndex() == -1 || timePicker1.getTime() == null) {
+        if (cbAsal.getSelectedIndex() == -1 || cbTujuan.getSelectedIndex() == -1 || timePicker1.getTime() == null) {
             JOptionPane.showMessageDialog(this, "Semua kolom harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -436,9 +454,6 @@ private void loadStasiunToComboBox() {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbAsalActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
      try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -456,10 +471,6 @@ private void loadStasiunToComboBox() {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(KelolaJadwalKRL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
